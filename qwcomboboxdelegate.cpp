@@ -1,11 +1,11 @@
 #include "qwcomboboxdelegate.h"
 #include <QComboBox>
-QWComboBoxDelegate::QWComboBoxDelegate(QObject *parent) : QStyledItemDelegate(parent)
+QWComboBoxDelegate::QWComboBoxDelegate(QObject* parent)
+    : QStyledItemDelegate(parent)
 {
-
 }
 
-QWidget *QWComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget* QWComboBoxDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QComboBox* comboBox = new QComboBox(parent);
     comboBox->addItem("circle");
@@ -14,7 +14,7 @@ QWidget *QWComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionVie
     return comboBox;
 }
 
-void QWComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void QWComboBoxDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     QComboBox* comboBox = static_cast<QComboBox*>(editor);
     QString value = index.data(Qt::EditRole).toString();
@@ -23,7 +23,7 @@ void QWComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
         comboBox->setCurrentIndex(currentIndex);
 }
 
-void QWComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void QWComboBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     QComboBox* comboBox = static_cast<QComboBox*>(editor);
     QString value = comboBox->currentText();
@@ -32,8 +32,7 @@ void QWComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model
     model->setData(index, currentIndex, Qt::UserRole);
 }
 
-void QWComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void QWComboBoxDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     editor->setGeometry(option.rect);
 }
-

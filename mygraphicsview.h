@@ -1,20 +1,20 @@
 #ifndef MYGRAPHICSVIEW_H
 #define MYGRAPHICSVIEW_H
 
-#include <QtWidgets>
-#include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QtWidgets>
 
-class MyGraphicsView : public QGraphicsView
-{
+class MyGraphicsView : public QGraphicsView {
     Q_OBJECT
 public:
-    QGraphicsScene *scene;
-    MyGraphicsView(QWidget *parent=nullptr);
+    QGraphicsScene* scene;
+    MyGraphicsView(QWidget* parent = nullptr);
+
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void wheelEvent(QWheelEvent *event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void wheelEvent(QWheelEvent* event) override;
 
 signals:
     void status(QString message);
@@ -22,6 +22,5 @@ signals:
 private:
     QPoint lastPos;
 };
-
 
 #endif // MYGRAPHICSVIEW_H

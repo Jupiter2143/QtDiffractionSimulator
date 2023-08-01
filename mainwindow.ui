@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -32,7 +32,16 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="MyOpenGLWidget" name="openGLWidget"/>
+         <widget class="QQuickWidget" name="quickWidget">
+          <property name="resizeMode">
+           <enum>QQuickWidget::SizeRootObjectToView</enum>
+          </property>
+          <property name="source">
+           <url>
+            <string>qrc:/qml/3D.qml</string>
+           </url>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -735,8 +744,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>110</width>
-               <height>135</height>
+               <width>98</width>
+               <height>121</height>
               </rect>
              </property>
              <attribute name="label">
@@ -784,8 +793,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>100</width>
-               <height>30</height>
+               <width>98</width>
+               <height>28</height>
               </rect>
              </property>
              <attribute name="label">
@@ -866,9 +875,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MyOpenGLWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header location="global">myopenglwidget.h</header>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
   </customwidget>
   <customwidget>
    <class>MyGraphicsView</class>

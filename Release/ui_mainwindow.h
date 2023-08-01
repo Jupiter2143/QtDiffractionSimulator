@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
+#include <QtQuickWidgets/QQuickWidget>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -34,7 +35,6 @@
 #include <QtWidgets/QWidget>
 #include <mydoublespinbox.h>
 #include <mygraphicsview.h>
-#include <myopenglwidget.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -46,7 +46,7 @@ public:
     QTabWidget *tabWidget;
     QWidget *tab;
     QHBoxLayout *horizontalLayout_2;
-    MyOpenGLWidget *openGLWidget;
+    QQuickWidget *quickWidget;
     QWidget *tab_2;
     QGridLayout *gridLayout;
     QGroupBox *groupBox;
@@ -149,10 +149,12 @@ public:
         tab->setObjectName("tab");
         horizontalLayout_2 = new QHBoxLayout(tab);
         horizontalLayout_2->setObjectName("horizontalLayout_2");
-        openGLWidget = new MyOpenGLWidget(tab);
-        openGLWidget->setObjectName("openGLWidget");
+        quickWidget = new QQuickWidget(tab);
+        quickWidget->setObjectName("quickWidget");
+        quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
+        quickWidget->setSource(QUrl(QString::fromUtf8("qrc:/qml/3D.qml")));
 
-        horizontalLayout_2->addWidget(openGLWidget);
+        horizontalLayout_2->addWidget(quickWidget);
 
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
@@ -521,7 +523,7 @@ public:
         toolBox->setLineWidth(2);
         page = new QWidget();
         page->setObjectName("page");
-        page->setGeometry(QRect(0, 0, 110, 135));
+        page->setGeometry(QRect(0, 0, 98, 121));
         gridLayout_3 = new QGridLayout(page);
         gridLayout_3->setObjectName("gridLayout_3");
         btnAdd = new QToolButton(page);
@@ -546,7 +548,7 @@ public:
         toolBox->addItem(page, QString::fromUtf8("Page 1"));
         page_2 = new QWidget();
         page_2->setObjectName("page_2");
-        page_2->setGeometry(QRect(0, 0, 100, 30));
+        page_2->setGeometry(QRect(0, 0, 98, 28));
         toolBox->addItem(page_2, QString::fromUtf8("Page 2"));
 
         horizontalLayout_15->addWidget(toolBox);
@@ -601,7 +603,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
         beamShapeBox->setCurrentIndex(0);
         toolBox->setCurrentIndex(0);
 

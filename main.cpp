@@ -1,14 +1,14 @@
-#include <iostream>
-#include <chrono>
 #include "mainwindow.h"
-#include "dialog.h"
 #include <QApplication>
-int main(int argc, char *argv[])
+#include <chrono>
+#include <iostream>
+
+int main(int argc, char* argv[])
 {
+    //    freopen("log.txt", "w", stdout);
+    //    freopen("err.txt", "w", stderr);
     QApplication app(argc, argv);
     MainWindow w;
     w.show();
-    //    Dialog d;
-    //    d.show();
     return app.exec();
 }

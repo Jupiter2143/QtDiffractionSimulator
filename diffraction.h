@@ -1,13 +1,12 @@
 #ifndef DIFFRACTION_H
 #define DIFFRACTION_H
-#include <omp.h>
-#include <cmath>
-#include <chrono>
-#include <iostream>
 #include "opencl.h"
+#include <chrono>
+#include <cmath>
+#include <iostream>
+#include <omp.h>
 
-struct SubPixel
-{
+struct SubPixel {
     int shape;
     float length;
     float width;
@@ -17,8 +16,7 @@ struct SubPixel
     float reflectance;
 };
 
-struct Load
-{
+struct Load {
     float scale;
     float l0;
     float L0;
@@ -40,22 +38,20 @@ struct Load
     float sin_theta;
     float cos_theta;
     float wave_number;
-
 };
 
-class Diffraction
-{
+class Diffraction {
 public:
-    static Load *load;
-    ContextInfo *contextInfo;
-    float *tempMatrix;
-    int *intensityMatrix;
+    static Load* load;
+    ContextInfo* contextInfo;
+    float* tempMatrix;
+    int* intensityMatrix;
     size_t global_work_size[2];
     size_t local_work_size[2];
     Diffraction();
-    void initOpenCL();
-    int *doNormalDiff(int *progress = NULL);
-    int *doOpenCLDiff(int *progress = NULL);
+    void initOpenCL(const char* kernelSource);
+    int* doNormalDiff(int* progress = NULL);
+    int* doOpenCLDiff(int* progress = NULL);
     ~Diffraction();
 
 private:

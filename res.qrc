@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>3D.qml</file>
+    </qresource>
+    <qresource prefix="/kernel">
+        <file>kernel.cl</file>
+    </qresource>
+</RCC>

@@ -1,12 +1,13 @@
 #include "backend.h"
-
-QMap<QString, double> unitMap{
-    {"m", 1.0},
-    {"cm", 0.01},
-    {"mm", 1.0e-3},
-    {"um", 1.0e-6},
-    {"nm", 1.0e-9}
+#include <QFile>
+QMap<QString, double> unitMap {
+    { "m", 1.0 },
+    { "cm", 0.01 },
+    { "mm", 1.0e-3 },
+    { "um", 1.0e-6 },
+    { "nm", 1.0e-9 }
 };
+char* buffer = new char[1024 * 64];
 
 static inline QRgb jetColorMap(int grayValue)
 {
@@ -30,19 +31,29 @@ static inline QRgb jetColorMap(int grayValue)
         return qRgb(252 - 4 * (i - 224), 0, 0);
 }
 
-BackEnd::BackEnd() : Diffraction()
+BackEnd::BackEnd()
+    : Diffraction()
 {
+    QFile file(":/kernel/kernel.cl");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        fprintf(stderr, "Cannot open kernel file\n");
+    } else {
+        QByteArray kernelSource = file.readAll();
+        memcpy(buffer, kernelSource.data(), kernelSource.size());
+        initOpenCL(buffer);
+        printf("OpenCL initialized\n");
+        file.close();
+    }
 }
 
-QImage BackEnd::createImage(int width, int height, int *dataArray)
+QImage BackEnd::createImage(int width, int height, int* dataArray)
 {
-    QRgb *rgbData = new QRgb[width * height];
-    for (int i = 0; i < width * height; ++i)
-    {
+    QRgb* rgbData = new QRgb[width * height];
+    for (int i = 0; i < width * height; ++i) {
         unsigned char value = dataArray[i];
         rgbData[i] = jetColorMap(value);
     }
-    QImage image((uchar *)rgbData, width, height, QImage::Format_RGB32);
+    QImage image((uchar*)rgbData, width, height, QImage::Format_RGB32);
     image.save("diffraction.png", "PNG");
     return image;
 }
@@ -55,11 +66,6 @@ void BackEnd::startCPUdiff()
 
 void BackEnd::startGPUdiff()
 {
-    if (hasInitOpenCL == false)
-    {
-        initOpenCL();
-        hasInitOpenCL = true;
-    }
     image = createImage(1024, 1024, doOpenCLDiff());
     emit workDone(&image);
 }

@@ -1,6 +1,7 @@
 #ifndef CREATEIMAGE_H
 #define CREATEIMAGE_H
 #include <QImage>
+
 static inline QRgb jetColorMap(int grayValue)
 {
     int i = std::max(0, std::min(255, grayValue));
@@ -23,15 +24,14 @@ static inline QRgb jetColorMap(int grayValue)
         return qRgb(252 - 4 * (i - 224), 0, 0);
 }
 
-QImage createImage(int width, int height, int *dataArray)
+QImage createImage(int width, int height, int* dataArray)
 {
-    QRgb *rgbData = new QRgb[width * height];
-    for (int i = 0; i < width * height; ++i)
-    {
+    QRgb* rgbData = new QRgb[width * height];
+    for (int i = 0; i < width * height; ++i) {
         unsigned char value = dataArray[i];
         rgbData[i] = jetColorMap(value);
     }
-    QImage image((uchar *)rgbData, width, height, QImage::Format_RGB32);
+    QImage image((uchar*)rgbData, width, height, QImage::Format_RGB32);
     image.save("diffraction.png", "PNG");
     return image;
 }
