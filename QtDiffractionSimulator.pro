@@ -1,30 +1,31 @@
 SOURCES += \
         backend.cpp \
+        dialog.cpp \
         diffraction.cpp \
         main.cpp \
         mainwindow.cpp \
+        mydelegate.cpp \
         mydoublespinbox.cpp \
         mygraphicsview.cpp \
         opencl.cpp \
-        qwcomboboxdelegate.cpp \
-        qwdoublespindelegate.cpp
-
+        viewwindow.cpp
 
 QMAKE_CXXFLAGS += /openmp /arch:AVX2 /Ox /fp:fast
 
-
 HEADERS += \
     backend.h \
-    createimage.h \
+    dialog.h \
     diffraction.h \
     mainwindow.h \
+    mydelegate.h \
     mydoublespinbox.h \
     mygraphicsview.h \
     opencl.h \
-    qwcomboboxdelegate.h \
-    qwdoublespindelegate.h
+    viewwindow.h
 
-QT += core gui widgets quickwidgets
+
+QT += core gui widgets
+QT+=quick quickwidgets
 
 DISTFILES +=
 
@@ -37,7 +38,11 @@ win32:!win32-g++: PRE_TARGETDEPS += E:/Programming/opencl/lib/OpenCL.lib
 else:win32-g++: PRE_TARGETDEPS += E:/Programming/opencl/lib/libOpenCL.a
 
 FORMS += \
-    mainwindow.ui
+    dialog.ui \
+    mainwindow.ui \
+    viewwindow.ui
 
 RESOURCES += \
     res.qrc
+
+#resources.files += Mymodel.qml

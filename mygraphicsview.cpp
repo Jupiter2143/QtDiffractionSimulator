@@ -11,8 +11,8 @@ MyGraphicsView::MyGraphicsView(QWidget* parent)
     setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing, true);
     scene = new QGraphicsScene(this);
 
-    QPixmap pixmap("diffraction.png");
-    scene->addPixmap(pixmap);
+    //    QPixmap pixmap("diffraction.png");
+    //    scene->addPixmap(pixmap);
 
     setScene(scene);
 }
@@ -38,8 +38,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
         verticalScrollBar()->setValue(verticalScrollBar()->value() - delta.y());
     } else {
         QPointF scenePos = mapToScene(event->pos()); // 将鼠标坐标转换为场景坐标
-        QString message = QString("x: %1, y: %2").arg(scenePos.x()).arg(scenePos.y()); // 将场景坐标转换为字符串
-        emit status(message);
+        emit status(scenePos.x(), scenePos.y());
     }
     QGraphicsView::mouseMoveEvent(event);
 }

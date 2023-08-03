@@ -11,6 +11,8 @@ extern QMap<QString, double> unitMap;
 class BackEnd : public QObject, public Diffraction {
     Q_OBJECT
 public:
+    int mappingWay = 0;
+    int threshold = 0;
     BackEnd();
     QImage createImage(int width, int height, int* dataArray);
 

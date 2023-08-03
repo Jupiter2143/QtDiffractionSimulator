@@ -1,7 +1,7 @@
 #include "mainwindow.h"
-
 #include "mygraphicsview.h"
 #include "ui_mainwindow.h"
+#include <QQmlProperty>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -13,7 +13,12 @@ MainWindow::MainWindow(QWidget* parent)
     initMenu();
     initModel();
     initTableView();
+    initGraphicsView();
+    initQuickWidget();
     initConnect();
+    ui->thresholdLabel->setVisible(false);
+    ui->horizontalSlider->setVisible(false);
+    dialog = new Dialog(this);
 }
 
 void MainWindow::initBackEnd()
@@ -61,36 +66,50 @@ void MainWindow::initTableView()
     on_btnAdd_clicked();
 }
 
+void MainWindow::initGraphicsView()
+{
+    viewWindow = new ViewWindow(this);
+    graphicsView = viewWindow->view;
+}
+
+void MainWindow::initQuickWidget()
+{
+    quickWidget = new QQuickWidget();
+    quickWidget->setSource(QUrl("qrc:/qml/3D.qml"));
+    root = quickWidget->rootObject();
+}
+
 void MainWindow::initConnect()
 {
     connect(backEnd, &BackEnd::workDone, this, &MainWindow::updateUI);
-    connect(ui->graphicsView, &MyGraphicsView::status, this,
+    connect(graphicsView, &MyGraphicsView::status, this,
         &MainWindow::updateStatusBar);
 }
 
 void MainWindow::collectData()
 {
-    Diffraction::load->scale = ui->scaleBox->value() / 1000.0f;
+    Diffraction::load->scale = ui->scaleBox->value() * unitMap.value(ui->scaleBox->suffix().trimmed());
     Diffraction::load->l0 = ui->l_0Box->value();
     Diffraction::load->L0 = ui->L_0Box->value();
     Diffraction::load->xCenter = ui->xCenterBox->value();
     Diffraction::load->yCenter = ui->yCenterBox->value();
     Diffraction::load->theta = ui->thetaBox->value() / 180.0f * M_PI;
     Diffraction::load->beamShape = ui->beamShapeBox->currentIndex();
-    Diffraction::load->beamRadius = ui->beamRadiusBox->value() * unitMap.value("mm");
-    Diffraction::load->beamLambda = ui->LambdaBox->value() * unitMap.value("nm");
-    Diffraction::load->xSpacing = ui->xSpacingBox->value() * unitMap.value("um");
-    Diffraction::load->ySpacing = ui->ySpacingBox->value() * unitMap.value("um");
-    Diffraction::load->xOffset = ui->xOffsetBox->value() * unitMap.value("um");
-    Diffraction::load->yOffset = ui->yOffsetBox->value() * unitMap.value("um");
-    Diffraction::load->subpixelsCount = (int)ui->subpixelsBox->value();
+    Diffraction::load->beamRadius = ui->beamRadiusBox->value() * unitMap.value(ui->beamRadiusBox->suffix().trimmed());
+    Diffraction::load->beamLambda = ui->LambdaBox->value() * unitMap.value(ui->LambdaBox->suffix().trimmed());
+    Diffraction::load->xSpacing = ui->xSpacingBox->value() * unitMap.value(ui->xSpacingBox->suffix().trimmed());
+    Diffraction::load->ySpacing = ui->ySpacingBox->value() * unitMap.value(ui->ySpacingBox->suffix().trimmed());
+    Diffraction::load->xOffset = ui->xOffsetBox->value() * unitMap.value(ui->xOffsetBox->suffix().trimmed());
+    Diffraction::load->yOffset = ui->yOffsetBox->value() * unitMap.value(ui->yOffsetBox->suffix().trimmed());
+    Diffraction::load->subpixelsCount = model->rowCount();
+    float unitValue = unitMap.value(ui->unitBox->currentText().trimmed());
     for (int i = 0; i < Diffraction::load->subpixelsCount; i++) {
         Diffraction::load->subpixels[i].shape = model->index(i, 0).data(Qt::UserRole).toInt();
-        Diffraction::load->subpixels[i].length = model->index(i, 1).data(Qt::EditRole).toFloat() * unitMap.value("um");
-        Diffraction::load->subpixels[i].width = model->index(i, 2).data(Qt::EditRole).toFloat() * unitMap.value("um");
-        Diffraction::load->subpixels[i].rho = model->index(i, 3).data(Qt::EditRole).toFloat() * unitMap.value("um");
-        Diffraction::load->subpixels[i].xRelative = model->index(i, 4).data(Qt::EditRole).toFloat() * unitMap.value("um");
-        Diffraction::load->subpixels[i].yRelative = model->index(i, 5).data(Qt::EditRole).toFloat() * unitMap.value("um");
+        Diffraction::load->subpixels[i].length = model->index(i, 1).data(Qt::EditRole).toFloat() * unitValue;
+        Diffraction::load->subpixels[i].width = model->index(i, 2).data(Qt::EditRole).toFloat() * unitValue;
+        Diffraction::load->subpixels[i].rho = model->index(i, 3).data(Qt::EditRole).toFloat() * unitValue;
+        Diffraction::load->subpixels[i].xRelative = model->index(i, 4).data(Qt::EditRole).toFloat() * unitValue;
+        Diffraction::load->subpixels[i].yRelative = model->index(i, 5).data(Qt::EditRole).toFloat() * unitValue;
         Diffraction::load->subpixels[i].reflectance = model->index(i, 6).data(Qt::EditRole).toFloat();
     }
     Diffraction::load->j_limit = Diffraction::load->beamRadius / Diffraction::load->ySpacing;
@@ -112,16 +131,6 @@ MainWindow::~MainWindow()
     delete thread;
 }
 
-void MainWindow::on_btnStart_clicked()
-{
-    ui->btnStart->setEnabled(false);
-    timeStart = std::chrono::system_clock::now();
-    collectData();
-    thread->start();
-    QMetaObject::invokeMethod(backEnd, "startGPUdiff");
-    //    QMetaObject::invokeMethod(backEnd, "startCPUdiff");
-}
-
 void MainWindow::updateUI(QImage* image)
 {
     timeEnd = std::chrono::system_clock::now();
@@ -129,25 +138,23 @@ void MainWindow::updateUI(QImage* image)
     printf("elapsed time: %f\n", elapsed_seconds.count());
     ui->plainTextEdit->appendPlainText(
         QString("Cost: %1 s").arg(elapsed_seconds.count()));
-    ui->graphicsView->scene->clear();
-    ui->graphicsView->scene->addPixmap(QPixmap::fromImage(*image));
-    ui->btnStart->setEnabled(true);
+    currentImage = *image;
+    QPixmap pixmap = QPixmap::fromImage(currentImage);
+    graphicsView->scene->addPixmap(pixmap);
+    ui->actStart->setEnabled(true);
+    viewWindow->show();
 }
 
-void MainWindow::on_btnStop_clicked()
+void MainWindow::updateStatusBar(float x, float y)
 {
-    if (thread->isRunning()) {
-        thread->terminate();
-        thread->wait();
-        delete thread;
-        thread = new QThread();
-    }
-    ui->btnStart->setEnabled(true);
-}
-
-void MainWindow::updateStatusBar(QString message)
-{
-    ui->statusbar->showMessage(message);
+    float X = x - 512;
+    float Y = 512 - y;
+    float FX = X * ui->scaleBox->value();
+    float FY = Y * ui->scaleBox->value();
+    QString message1 = "坐标: (" + QString::number(X, 'f', 2) + ", " + QString::number(Y, 'f', 2) + ") ";
+    QString message2 = "物理坐标: (" + QString::number(FX, 'f', 2) + ", " + QString::number(FY, 'f', 2) + ") ";
+    ui->statusbar->showMessage(message1 + message2 + ui->scaleBox->suffix().trimmed());
+    viewWindow->statusBar()->showMessage(message1 + message2 + ui->scaleBox->suffix().trimmed());
 }
 
 void MainWindow::on_btnAdd_clicked()
@@ -169,20 +176,98 @@ void MainWindow::on_btnAdd_clicked()
     for (int i = 0; i < items.size(); ++i) {
         model->setItem(model->rowCount() - 1, i, items.at(i));
     }
-}
-
-void MainWindow::on_btnShow_clicked()
-{
-    int row = ui->tableView->currentIndex().row();
-    int col = ui->tableView->currentIndex().column();
-    QString info = model->index(row, col).data().toString();
-    ui->plainTextEdit->appendPlainText("info=" + info + QString::number(unitMap.value("um")));
-    //    int currentIndex = model->index(1, 1).data(Qt::UserRole).toInt();
-    //    ui->plainTextEdit->appendPlainText("currentIndex="+QString::number(currentIndex));
+    ui->lineEdit->setText(QString::number(model->rowCount()));
 }
 
 void MainWindow::on_btnDelete_clicked()
 {
     int row = ui->tableView->currentIndex().row();
     model->removeRow(row);
+    ui->lineEdit->setText(QString::number(model->rowCount()));
+}
+
+void MainWindow::on_actStart_triggered()
+{
+    ui->actStart->setEnabled(false);
+    timeStart = std::chrono::system_clock::now();
+    collectData();
+    thread->start();
+    if (ui->processorBox->currentIndex() == 0)
+        QMetaObject::invokeMethod(backEnd, "startCPUdiff");
+    else
+        QMetaObject::invokeMethod(backEnd, "startGPUdiff");
+}
+
+void MainWindow::on_actClose_triggered()
+{
+    if (thread->isRunning()) {
+        thread->terminate();
+        thread->wait();
+        delete thread;
+        thread = new QThread();
+    }
+    ui->actStart->setEnabled(true);
+}
+
+void MainWindow::on_actShow_triggered()
+{
+    viewWindow->show();
+}
+
+void MainWindow::on_acExport_triggered()
+{
+    QString defaultFileName = QDir::currentPath() + "/diffraction.png";
+    QString fileName = QFileDialog::getSaveFileName(this, tr("保存图像"), defaultFileName, tr("Images (*.png)"));
+    if (fileName.isEmpty()) {
+        return;
+    }
+    if (!currentImage.save(fileName)) {
+        QMessageBox::information(this, tr("保存图像"), tr("保存失败! "));
+        return;
+    } else {
+        QMessageBox::information(this, tr("保存图像"), tr("保存成功！"));
+    }
+}
+
+void MainWindow::on_mapBox_currentIndexChanged(int index)
+{
+    backEnd->mappingWay = index;
+    if (index == 2) {
+        ui->thresholdLabel->setVisible(true);
+        ui->horizontalSlider->setVisible(true);
+    } else {
+        ui->thresholdLabel->setVisible(false);
+        ui->horizontalSlider->setVisible(false);
+    }
+}
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    backEnd->threshold = value;
+    ui->thresholdLabel->setText("阈值: " + QString::number(value));
+}
+
+void MainWindow::on_unitBox_currentTextChanged(const QString& arg1)
+{
+    model->setHeaderData(1, Qt::Horizontal, "长度(" + arg1 + ")");
+    model->setHeaderData(2, Qt::Horizontal, "宽度(" + arg1 + ")");
+    model->setHeaderData(3, Qt::Horizontal, "半径(" + arg1 + ")");
+    model->setHeaderData(4, Qt::Horizontal, "x偏移(" + arg1 + ")");
+    model->setHeaderData(5, Qt::Horizontal, "y偏移(" + arg1 + ")");
+}
+
+void MainWindow::on_actQML_triggered()
+{
+    quickWidget->show();
+}
+
+void MainWindow::on_actHelp_triggered()
+{
+    QUrl fileUrl("help.pdf");
+    QDesktopServices::openUrl(fileUrl);
+}
+
+void MainWindow::on_actAbout_triggered()
+{
+    dialog->show();
 }

@@ -17,7 +17,7 @@ protected:
     void wheelEvent(QWheelEvent* event) override;
 
 signals:
-    void status(QString message);
+    void status(float x, float y);
 
 private:
     QPoint lastPos;

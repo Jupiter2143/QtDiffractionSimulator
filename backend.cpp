@@ -41,7 +41,6 @@ BackEnd::BackEnd()
         QByteArray kernelSource = file.readAll();
         memcpy(buffer, kernelSource.data(), kernelSource.size());
         initOpenCL(buffer);
-        printf("OpenCL initialized\n");
         file.close();
     }
 }
@@ -50,11 +49,20 @@ QImage BackEnd::createImage(int width, int height, int* dataArray)
 {
     QRgb* rgbData = new QRgb[width * height];
     for (int i = 0; i < width * height; ++i) {
-        unsigned char value = dataArray[i];
-        rgbData[i] = jetColorMap(value);
+        if (mappingWay == 0) { // 使用jet颜色映射
+            unsigned char value = dataArray[i];
+            rgbData[i] = jetColorMap(value);
+        } else if (mappingWay == 1) { // 使用灰度映射
+            rgbData[i] = qRgb(dataArray[i], dataArray[i], dataArray[i]);
+        } else if (mappingWay == 2) { // 使用黑白映射
+            if (dataArray[i] > threshold)
+                rgbData[i] = qRgb(255, 255, 255);
+            else
+                rgbData[i] = qRgb(0, 0, 0);
+        }
     }
     QImage image((uchar*)rgbData, width, height, QImage::Format_RGB32);
-    image.save("diffraction.png", "PNG");
+    //    image.save("diffraction.png", "PNG");
     return image;
 }
 
