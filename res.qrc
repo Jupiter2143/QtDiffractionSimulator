@@ -1,12 +1,12 @@
 <RCC>
     <qresource prefix="/qml">
-        <file>3D.qml</file>
-        <file>Mymodel.qml</file>
+        <file>sourceDir/3D.qml</file>
+        <file>sourceDir/Mymodel.qml</file>
     </qresource>
     <qresource prefix="/kernel">
-        <file>kernel.cl</file>
+        <file>kernelDir/kernel.cl</file>
     </qresource>
     <qresource prefix="/res">
-        <file>laser.png</file>
+        <file>sourceDir/laser.png</file>
     </qresource>
 </RCC>

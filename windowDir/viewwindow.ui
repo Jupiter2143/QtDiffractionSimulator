@@ -43,7 +43,7 @@
   <customwidget>
    <class>MyGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header location="global">mygraphicsview.h</header>
+   <header location="global">classDir/mygraphicsview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

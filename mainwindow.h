@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "backend.h"
-#include "dialog.h"
-#include "mydelegate.h"
-#include "mygraphicsview.h"
-#include "viewwindow.h"
+#include "classDir/mydelegate.h"
+#include "classDir/mygraphicsview.h"
+#include "kernelDir/backend.h"
+#include "windowDir/dialog.h"
+#include "windowDir/viewwindow.h"
 #include <QGraphicsScene>
 #include <QImage>
 #include <QMainWindow>

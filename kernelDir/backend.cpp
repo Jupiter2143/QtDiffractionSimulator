@@ -34,7 +34,7 @@ static inline QRgb jetColorMap(int grayValue)
 BackEnd::BackEnd()
     : Diffraction()
 {
-    QFile file(":/kernel/kernel.cl");
+    QFile file(":/kernel/kernelDir/kernel.cl");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         fprintf(stderr, "Cannot open kernel file\n");
     } else {

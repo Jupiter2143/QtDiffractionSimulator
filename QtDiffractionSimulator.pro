@@ -1,48 +1,49 @@
 SOURCES += \
-        backend.cpp \
-        dialog.cpp \
-        diffraction.cpp \
+        kernelDir/backend.cpp \
+        windowDir/dialog.cpp \
+        kernelDir/diffraction.cpp \
         main.cpp \
         mainwindow.cpp \
-        mydelegate.cpp \
-        mydoublespinbox.cpp \
-        mygraphicsview.cpp \
-        opencl.cpp \
-        viewwindow.cpp
+        classDir/mydelegate.cpp \
+        classDir/mydoublespinbox.cpp \
+        classDir/mygraphicsview.cpp \
+        KernelDir/opencl.cpp \
+        windowDir/viewwindow.cpp
 
-QMAKE_CXXFLAGS += /openmp /arch:AVX2 /Ox /fp:fast
+QMAKE_CXXFLAGS += /openmp /Ox
 
 HEADERS += \
-    backend.h \
-    dialog.h \
-    diffraction.h \
+    kernelDir/backend.h \
+    windowDir/dialog.h \
+    kernelDir/diffraction.h \
     mainwindow.h \
-    mydelegate.h \
-    mydoublespinbox.h \
-    mygraphicsview.h \
-    opencl.h \
-    viewwindow.h
-
+    classDir/mydelegate.h \
+    classDir/mydoublespinbox.h \
+    classDir/mygraphicsview.h \
+    kernelDir/opencl.h \
+    windowDir/viewwindow.h
 
 QT += core gui widgets
-QT+=quick quickwidgets
+QT += quick quickwidgets
 
-DISTFILES +=
-
-win32: LIBS += -LE:/Programming/opencl/lib/ -lOpenCL
-
-INCLUDEPATH += E:/Programming/opencl/include
-DEPENDPATH += E:/Programming/opencl/include
-
-win32:!win32-g++: PRE_TARGETDEPS += E:/Programming/opencl/lib/OpenCL.lib
-else:win32-g++: PRE_TARGETDEPS += E:/Programming/opencl/lib/libOpenCL.a
 
 FORMS += \
-    dialog.ui \
+    windowDir/dialog.ui \
     mainwindow.ui \
-    viewwindow.ui
+    windowDir/viewwindow.ui
 
 RESOURCES += \
     res.qrc
 
 #resources.files += Mymodel.qml
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCLd
+
+INCLUDEPATH += $$PWD/lib/opencl/include
+DEPENDPATH += $$PWD/lib/opencl/include
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/libOpenCL.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/libOpenCLd.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/OpenCL.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/OpenCLd.lib

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
-#include "mygraphicsview.h"
+
+#include "classDir/mygraphicsview.h"
 #include "ui_mainwindow.h"
 #include <QQmlProperty>
 
@@ -75,7 +76,7 @@ void MainWindow::initGraphicsView()
 void MainWindow::initQuickWidget()
 {
     quickWidget = new QQuickWidget();
-    quickWidget->setSource(QUrl("qrc:/qml/3D.qml"));
+    quickWidget->setSource(QUrl("qrc:/qml/sourceDir/3D.qml"));
     root = quickWidget->rootObject();
 }
 

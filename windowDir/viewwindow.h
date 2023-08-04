@@ -1,7 +1,7 @@
 #ifndef VIEWWINDOW_H
 #define VIEWWINDOW_H
 
-#include "mygraphicsview.h"
+#include "classDir/mygraphicsview.h"
 #include <QMainWindow>
 
 namespace Ui {

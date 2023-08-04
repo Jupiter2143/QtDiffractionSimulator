@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="res.qrc">
-    <normaloff>:/res/laser.png</normaloff>:/res/laser.png</iconset>
+    <normaloff>:/res/sourceDir/laser.png</normaloff>:/res/sourceDir/laser.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">font-family: Consolas;
@@ -1242,7 +1242,7 @@ font-size: 13px;</string>
   <customwidget>
    <class>MyDoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
-   <header location="global">mydoublespinbox.h</header>
+   <header location="global">classDir/mydoublespinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources>
