@@ -38,12 +38,12 @@ RESOURCES += \
 #resources.files += Mymodel.qml
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCLd
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL
 
 INCLUDEPATH += $$PWD/lib/opencl/include
 DEPENDPATH += $$PWD/lib/opencl/include
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/libOpenCL.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/libOpenCLd.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/libOpenCL.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/OpenCL.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/OpenCLd.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/opencl/lib/OpenCL.lib

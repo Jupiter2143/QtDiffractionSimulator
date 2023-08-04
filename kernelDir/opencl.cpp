@@ -1,39 +1,19 @@
 #include "opencl.h"
+#include <exception>
 #define MAX_PLATFORM 10
 #define MAX_DEVICE 10
 
 static cl_int err = CL_SUCCESS;
-char* readKernelFile(const char* filename)
-{
-    FILE* file;
-    fopen_s(&file, filename, "r");
-    if (file == NULL) {
-        char filename2[100];
-        sprintf(filename2, ".%s", filename);
-        fopen_s(&file, filename2, "r");
-        if (file == NULL) {
-            printf("Could not open file %s\n", filename2);
-            exit(1);
-        }
-    }
-
-    char* charArray = (char*)malloc(sizeof(char) * MAX_SIZE);
-    int i = 0;
-    int ch;
-    while ((ch = fgetc(file)) != EOF && i < MAX_SIZE - 1) {
-        charArray[i] = (char)ch;
-        i++;
-    }
-    charArray[i] = '\0';
-    fclose(file);
-    return charArray;
-}
+char errorString[1024] { 0 };
+char buffer[1024 * 64] { 0 };
 
 void chkerr(cl_int err, const char* msg)
 {
     if (err != CL_SUCCESS) {
-        printf("Error %s: (%d)\n", msg, err);
-        exit(EXIT_FAILURE);
+        sprintf(errorString, ">>Error when %s: (%d)\n", msg, err);
+        throw std::exception(errorString);
+    } else {
+        printf(">>Success %s\n", msg);
     }
 }
 
@@ -55,6 +35,7 @@ DeviceInfo* getAllDeviceInfo(cl_uint& num)
     }
     num = totalDevices;
     int count = 0;
+    fflush(stdout);
     deviceInfos = (DeviceInfo*)malloc(sizeof(DeviceInfo) * totalDevices);
     for (cl_uint i = 0; i < numPlatforms; ++i) {
         err = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, MAX_DEVICE,
@@ -70,52 +51,41 @@ DeviceInfo* getAllDeviceInfo(cl_uint& num)
         err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_TYPE,
             sizeof(deviceInfos[i].type),
             &deviceInfos[i].type, NULL);
-        chkerr(err, "getting device type");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_NAME,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_NAME,
             sizeof(deviceInfos[i].name), deviceInfos[i].name,
             NULL);
-        chkerr(err, "getting device name");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_VENDOR,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_VENDOR,
             sizeof(deviceInfos[i].vendor),
             deviceInfos[i].vendor, NULL);
-        chkerr(err, "getting device vendor");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_VERSION,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_VERSION,
             sizeof(deviceInfos[i].version),
             deviceInfos[i].version, NULL);
-        chkerr(err, "getting device version");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DRIVER_VERSION,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DRIVER_VERSION,
             sizeof(deviceInfos[i].driverVersion),
             deviceInfos[i].driverVersion, NULL);
-        chkerr(err, "getting device driver version");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_COMPUTE_UNITS,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_COMPUTE_UNITS,
             sizeof(deviceInfos[i].maxComputeUnits),
             &deviceInfos[i].maxComputeUnits, NULL);
-        chkerr(err, "getting device max compute units");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_CLOCK_FREQUENCY,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_CLOCK_FREQUENCY,
             sizeof(deviceInfos[i].maxClockFrequency),
             &deviceInfos[i].maxClockFrequency, NULL);
-        chkerr(err, "getting device max clock frequency");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_WORK_GROUP_SIZE,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_WORK_GROUP_SIZE,
             sizeof(deviceInfos[i].maxWorkGroupSize),
             &deviceInfos[i].maxWorkGroupSize, NULL);
-        chkerr(err, "getting device max work group size");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_GLOBAL_MEM_SIZE,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_GLOBAL_MEM_SIZE,
             sizeof(deviceInfos[i].globalMemSize),
             &deviceInfos[i].globalMemSize, NULL);
-        chkerr(err, "getting device global memory size");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_MEM_ALLOC_SIZE,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_MEM_ALLOC_SIZE,
             sizeof(deviceInfos[i].maxMemAllocSize),
             &deviceInfos[i].maxMemAllocSize, NULL);
-        chkerr(err, "getting device max memory allocation size");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_WORK_GROUP_SIZE,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_WORK_GROUP_SIZE,
             sizeof(deviceInfos[i].maxWorkGroupSize),
             &deviceInfos[i].maxWorkGroupSize, NULL);
-        chkerr(err, "getting device max work group size");
-        err = clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_WORK_ITEM_SIZES,
+        err += clGetDeviceInfo(deviceInfos[i].device, CL_DEVICE_MAX_WORK_ITEM_SIZES,
             sizeof(deviceInfos[i].maxWorkItemSizes),
             &deviceInfos[i].maxWorkItemSizes, NULL);
-        chkerr(err, "getting device max work item sizes");
     }
+    chkerr(err, "getting device info");
     return deviceInfos;
 }
 
@@ -156,41 +126,28 @@ ContextInfo* setupContext(DeviceInfo* deviceInfo, cl_uint num)
     ContextInfo* contextInfo = (ContextInfo*)malloc(num * sizeof(ContextInfo));
     for (cl_uint i = 0; i < num; ++i) {
         contextInfo[i].deviceInfo = &deviceInfo[i];
+        printf("Creating context for device %d\n\n", i);
         contextInfo[i].context = clCreateContext(NULL, 1, &deviceInfo[i].device, NULL, NULL, &err);
-        chkerr(err, "clCreateContext");
+        chkerr(err, "creating context");
         contextInfo[i].queue = clCreateCommandQueue(contextInfo[i].context, deviceInfo[i].device, 0, &err);
-        chkerr(err, "clCreateCommandQueue");
+        chkerr(err, "creating command queue");
     }
     return contextInfo;
 }
 
-void setupProgram(ContextInfo* contextInfo, const char* filename)
-{
-    const char* kernelSource = readKernelFile(filename);
-    contextInfo->program = clCreateProgramWithSource(contextInfo->context, 1, &kernelSource, NULL, &err);
-    chkerr(err, "clCreateProgramWithSource");
-    err = clBuildProgram(contextInfo->program, 1, &contextInfo->deviceInfo->device, NULL, NULL, NULL);
-    if (err != CL_SUCCESS) {
-        printf("Error: Failed to build program executable!\n");
-        size_t len;
-        char buffer[1024 * 64];
-        clGetProgramBuildInfo(contextInfo->program, contextInfo->deviceInfo->device, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
-        printf("%s\n", buffer);
-        exit(1);
-    }
-    free((void*)kernelSource);
-}
-void setupProgram2(ContextInfo* contextInfo, const char* kernelSource)
+void setupProgram(ContextInfo* contextInfo, const char* kernelSource)
 {
     contextInfo->program = clCreateProgramWithSource(contextInfo->context, 1, &kernelSource, NULL, &err);
-    chkerr(err, "clCreateProgramWithSource");
+    chkerr(err, "creating source program");
+    size_t len;
     err = clBuildProgram(contextInfo->program, 1, &contextInfo->deviceInfo->device, NULL, NULL, NULL);
-    if (err != CL_SUCCESS) {
+    clGetProgramBuildInfo(contextInfo->program, contextInfo->deviceInfo->device, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
+    if (err == CL_SUCCESS) {
+        printf("Success building program\n");
+    } else {
         printf("Error: Failed to build program executable!\n");
-        size_t len;
-        char buffer[1024 * 64];
-        clGetProgramBuildInfo(contextInfo->program, contextInfo->deviceInfo->device, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
-        printf("%s\n", buffer);
+        printf("%s\n\n", buffer);
+        throw std::exception("Failed to build program executable");
         exit(1);
     }
     free((void*)kernelSource);
@@ -198,5 +155,5 @@ void setupProgram2(ContextInfo* contextInfo, const char* kernelSource)
 void setupKernel(ContextInfo* contextInfo, const char* kernelname)
 {
     contextInfo->kernel = clCreateKernel(contextInfo->program, kernelname, &err);
-    chkerr(err, "clCreateKernel");
+    chkerr(err, "creating kernel");
 }

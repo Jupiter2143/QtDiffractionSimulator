@@ -1,3 +1,6 @@
+#ifndef __PI
+#define __PI 3.14159265358979323846f
+#endif
 #define SIZE 1024
 #define CIRC 0
 #define RECT 1
@@ -66,7 +69,7 @@ __global LOAD *load;
 
 static inline float sinc_pi(float x)
 {
-    if (x >= 1.43051e-5 || x <= -1.43051e-5)
+    if (x >= 1.43051e-5f || x <= -1.43051e-5f)
     {
         return sin(x) / x;
     }
@@ -77,7 +80,7 @@ static inline float sinc_pi(float x)
 }
 static inline float sinc(float x)
 {
-    return sinc_pi(M_PI * x);
+    return sinc_pi(__PI * x);
 }
 static inline float J1(float x)
 {
@@ -100,8 +103,8 @@ static inline float J1(float x)
         z = 8.0f / ax;
         y = z * z;
         xx = ax - 2.356194491f;
-        ans1 = 1.0 + y * (-0.1098628627e-2f + y * (0.2734510407e-4f +
-                                                   y * (-0.2073370639e-5f + y * 0.2093887211e-6f)));
+        ans1 = 1.0f + y * (-0.1098628627e-2f + y * (0.2734510407e-4f +
+                                                    y * (-0.2073370639e-5f + y * 0.2093887211e-6f)));
         ans2 = -0.1562499995e-1f + y * (0.1430488765e-3f +
                                         y * (-0.6911147651e-5f + y * (0.7621095161e-6f -
                                                                       y * 0.934935152e-7f)));
@@ -116,7 +119,7 @@ static inline float jinc(float x)
     {
         return 1.0f;
     }
-    return 2.0f * J1(M_PI * x) / (M_PI * x);
+    return 2.0f * J1(__PI * x) / (__PI * x);
 }
 
 static inline void doNormDiff(float x, float y, float l, float L, float *RE, float *IM)
@@ -197,6 +200,8 @@ __kernel void diff(__global LOAD *input, __global float *result)
     int i = get_global_id(0);
     int j = get_global_id(1);
     load = input;
-//    printf("xCenter = %f, yCenter = %f, scale = %f\n", xCenter, yCenter, scale);y
     result[i + j * SIZE] = calIntensity((i - 512) * scale + xCenter , (j - 512) * scale - yCenter);
 }
+
+
+

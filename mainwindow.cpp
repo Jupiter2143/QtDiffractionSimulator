@@ -9,17 +9,16 @@ MainWindow::MainWindow(QWidget* parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->scaleLabel->setToolTip("每个像素代表的实际物理长度");
+
     initBackEnd();
+
     initMenu();
     initModel();
     initTableView();
     initGraphicsView();
     initQuickWidget();
     initConnect();
-    ui->thresholdLabel->setVisible(false);
-    ui->horizontalSlider->setVisible(false);
-    dialog = new Dialog(this);
+    initUI();
 }
 
 void MainWindow::initBackEnd()
@@ -80,11 +79,20 @@ void MainWindow::initQuickWidget()
     root = quickWidget->rootObject();
 }
 
+void MainWindow::initUI()
+{
+    ui->thresholdLabel->setVisible(false);
+    ui->horizontalSlider->setVisible(false);
+    dialog = new Dialog(this);
+    ui->scaleLabel->setToolTip("每个像素代表的实际物理长度");
+}
+
 void MainWindow::initConnect()
 {
-    connect(backEnd, &BackEnd::workDone, this, &MainWindow::updateUI);
+
     connect(graphicsView, &MyGraphicsView::status, this,
         &MainWindow::updateStatusBar);
+    connect(backEnd, &BackEnd::workDone, this, &MainWindow::updateUI);
 }
 
 void MainWindow::collectData()
@@ -97,6 +105,8 @@ void MainWindow::collectData()
     Diffraction::load->theta = ui->thetaBox->value() / 180.0f * M_PI;
     Diffraction::load->beamShape = ui->beamShapeBox->currentIndex();
     Diffraction::load->beamRadius = ui->beamRadiusBox->value() * unitMap.value(ui->beamRadiusBox->suffix().trimmed());
+    if (Diffraction::load->beamShape == 2)
+        Diffraction::load->beamRadius = 0;
     Diffraction::load->beamLambda = ui->LambdaBox->value() * unitMap.value(ui->LambdaBox->suffix().trimmed());
     Diffraction::load->xSpacing = ui->xSpacingBox->value() * unitMap.value(ui->xSpacingBox->suffix().trimmed());
     Diffraction::load->ySpacing = ui->ySpacingBox->value() * unitMap.value(ui->ySpacingBox->suffix().trimmed());
@@ -189,14 +199,41 @@ void MainWindow::on_btnDelete_clicked()
 
 void MainWindow::on_actStart_triggered()
 {
+
     ui->actStart->setEnabled(false);
     timeStart = std::chrono::system_clock::now();
     collectData();
     thread->start();
     if (ui->processorBox->currentIndex() == 0)
-        QMetaObject::invokeMethod(backEnd, "startCPUdiff");
-    else
-        QMetaObject::invokeMethod(backEnd, "startGPUdiff");
+        try {
+            QMetaObject::invokeMethod(backEnd, "startCPUdiff");
+        } catch (std::exception& e) {
+            printf("%s\n", e.what());
+            QMessageBox::critical(this, "崩溃", "程序崩溃，请查看输出日志并联系开发者");
+            exit(1);
+        }
+    else {
+        try {
+            if (!backEnd->hasInitOpenCL) {
+                ui->plainTextEdit->appendPlainText("Initializing OpenCL...");
+                backEnd->initOpenCL();
+                ui->plainTextEdit->appendPlainText("OpenCL initialized.");
+            }
+        } catch (std::exception& e) {
+            printf("%s\n", e.what());
+            QMessageBox::information(this, "初始化", "初始化失败！请检查OpenCL环境是否正常！");
+            ui->plainTextEdit->appendPlainText(e.what());
+            ui->actStart->setEnabled(true);
+            return;
+        }
+        try {
+            QMetaObject::invokeMethod(backEnd, "startGPUdiff");
+        } catch (std::exception& e) {
+            printf("%s\n", e.what());
+            QMessageBox::critical(this, "崩溃", "程序崩溃，请查看输出日志并联系开发者");
+            exit(1);
+        }
+    }
 }
 
 void MainWindow::on_actClose_triggered()
@@ -271,4 +308,20 @@ void MainWindow::on_actHelp_triggered()
 void MainWindow::on_actAbout_triggered()
 {
     dialog->show();
+}
+
+void MainWindow::on_actInit_triggered()
+{
+    try {
+        if (!backEnd->hasInitOpenCL) {
+            ui->plainTextEdit->appendPlainText("Initializing OpenCL...");
+            backEnd->initOpenCL();
+            ui->plainTextEdit->appendPlainText("OpenCL initialized.");
+        }
+    } catch (std::exception& e) {
+        QMessageBox::information(this, "初始化", "初始化失败！请检查OpenCL环境是否正常！");
+        ui->plainTextEdit->appendPlainText(e.what());
+        printf("%s\n", e.what());
+        return;
+    }
 }

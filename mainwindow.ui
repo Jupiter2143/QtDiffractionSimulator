@@ -90,7 +90,7 @@ font-size: 13px;</string>
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="suffix">
-                <string>   °</string>
+                <string>  °</string>
                </property>
                <property name="decimals">
                 <number>3</number>
@@ -142,7 +142,7 @@ font-size: 13px;</string>
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="suffix">
-                <string>   m</string>
+                <string>  m</string>
                </property>
                <property name="decimals">
                 <number>3</number>
@@ -196,7 +196,7 @@ font-size: 13px;</string>
                 <string/>
                </property>
                <property name="suffix">
-                <string>   m</string>
+                <string>  m</string>
                </property>
                <property name="decimals">
                 <number>3</number>
@@ -1201,6 +1201,7 @@ font-size: 13px;</string>
    <addaction name="actClose"/>
    <addaction name="actShow"/>
    <addaction name="actQML"/>
+   <addaction name="actInit"/>
   </widget>
   <action name="actStart">
    <property name="text">
@@ -1235,6 +1236,11 @@ font-size: 13px;</string>
   <action name="actAbout">
    <property name="text">
     <string>关于</string>
+   </property>
+  </action>
+  <action name="actInit">
+   <property name="text">
+    <string>初始化</string>
    </property>
   </action>
  </widget>

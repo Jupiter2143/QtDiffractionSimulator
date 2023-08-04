@@ -19,10 +19,6 @@ struct DeviceInfo {
     cl_ulong maxMemAllocSize; // 设备支持的最大内存分配大小（字节）
     size_t maxWorkGroupSize; // 设备支持的最大工作组大小
     size_t maxWorkItemSizes[3]; // 设备支持的每个维度的最大工作项数量
-    ~DeviceInfo()
-    {
-        clReleaseDevice(device);
-    }
 };
 struct ContextInfo {
     DeviceInfo* deviceInfo; // 设备信息
@@ -30,20 +26,11 @@ struct ContextInfo {
     cl_command_queue queue; // 命令队列
     cl_program program; // 程序
     cl_kernel kernel; // 内核
-    ~ContextInfo()
-    {
-        //        clReleaseKernel(*kernel);
-        clReleaseProgram(program);
-        clReleaseCommandQueue(queue);
-        clReleaseContext(context);
-    }
 };
 
 float J1(float x);
 
 void chkerr(cl_int err, const char* msg);
-
-char* readKernelFile(const char* filename);
 
 DeviceInfo* getAllDeviceInfo(cl_uint& num);
 
@@ -51,9 +38,7 @@ void printDeviceInfo(DeviceInfo* deviceInfo, cl_uint num);
 
 ContextInfo* setupContext(DeviceInfo* deviceInfo, cl_uint num);
 
-void setupProgram(ContextInfo* contextInfo, const char* filename);
-
-void setupProgram2(ContextInfo* contextInfo, const char* kernelSource);
+void setupProgram(ContextInfo* contextInfo, const char* kernelSource);
 
 void setupKernel(ContextInfo* contextInfo, const char* kernelname);
 

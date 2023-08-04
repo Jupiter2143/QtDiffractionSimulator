@@ -13,12 +13,14 @@ class BackEnd : public QObject, public Diffraction {
 public:
     int mappingWay = 0;
     int threshold = 0;
+    bool hasInitOpenCL = false;
     BackEnd();
+    void initOpenCL();
     QImage createImage(int width, int height, int* dataArray);
 
 private:
     QImage image;
-    bool hasInitOpenCL = false;
+
 public slots:
     void startCPUdiff();
     void startGPUdiff();

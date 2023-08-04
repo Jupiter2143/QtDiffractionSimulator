@@ -4,6 +4,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+#define CLINDEX 0
 #define SIZE 1024
 #define CIRC 0
 #define RECT 1
@@ -188,20 +189,35 @@ int* Diffraction::doNormalDiff(int* progress)
 
 void Diffraction::initOpenCL(const char* kernelSource)
 {
+    fprintf(stdout, "Getting device info...\n");
     DeviceInfo* devices = getAllDeviceInfo(numDevices);
-    contextInfo = setupContext(devices, numDevices);
-    //    setupProgram(&contextInfo[0], ".\\kernel.cl");
-    setupProgram2(&contextInfo[0], kernelSource);
-    setupKernel(&contextInfo[0], "diff");
 
-    loadBuffer = clCreateBuffer(contextInfo[0].context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(Load), load, &err);
-    chkerr(err, "create buffer");
-    intensityMatrixBuffer = clCreateBuffer(contextInfo[0].context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, sizeof(float) * SIZE * SIZE, NULL, &err);
-    chkerr(err, "create buffer");
-    err = clSetKernelArg(contextInfo[0].kernel, 0, sizeof(cl_mem), &loadBuffer);
-    chkerr(err, "commit message");
-    err = clSetKernelArg(contextInfo[0].kernel, 1, sizeof(cl_mem), &intensityMatrixBuffer);
-    chkerr(err, "set arg 1");
+    printDeviceInfo(devices, numDevices);
+
+    fprintf(stdout, "\nCreating context...\n");
+
+    contextInfo = setupContext(devices, numDevices);
+
+    fprintf(stdout, "\nBuilding program...\n");
+
+    setupProgram(&contextInfo[CLINDEX], kernelSource);
+
+    fprintf(stdout, "\nCreating kernel...\n");
+
+    setupKernel(&contextInfo[CLINDEX], "diff");
+
+    fprintf(stdout, "\nCreating buffers...\n");
+
+    loadBuffer = clCreateBuffer(contextInfo[CLINDEX].context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(Load), load, &err);
+    chkerr(err, "creating buffer");
+    intensityMatrixBuffer = clCreateBuffer(contextInfo[CLINDEX].context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, sizeof(float) * SIZE * SIZE, NULL, &err);
+    chkerr(err, "creating buffer");
+    fprintf(stdout, "\nSetting kernel arguments...\n");
+
+    err = clSetKernelArg(contextInfo[CLINDEX].kernel, 0, sizeof(cl_mem), &loadBuffer);
+    chkerr(err, "committing LoadBuffer");
+    err = clSetKernelArg(contextInfo[CLINDEX].kernel, 1, sizeof(cl_mem), &intensityMatrixBuffer);
+    chkerr(err, "committing MatrixBuffer");
 }
 
 void Diffraction::getMatrix()
@@ -217,15 +233,15 @@ void Diffraction::getMatrix()
 
 int* Diffraction::doOpenCLDiff(int* progress)
 {
-    clEnqueueWriteBuffer(contextInfo[0].queue, loadBuffer, CL_TRUE, 0, sizeof(Load), load, 0, NULL, NULL);
-    chkerr(err, "write buffer");
+    clEnqueueWriteBuffer(contextInfo[CLINDEX].queue, loadBuffer, CL_TRUE, 0, sizeof(Load), load, 0, NULL, NULL);
+    chkerr(err, "writting buffer");
 
-    err = clEnqueueNDRangeKernel(contextInfo[0].queue, contextInfo[0].kernel, 2,
+    err = clEnqueueNDRangeKernel(contextInfo[CLINDEX].queue, contextInfo[CLINDEX].kernel, 2,
         NULL, global_work_size, local_work_size, 0, NULL,
         NULL);
     chkerr(err, "enqueueing kernel");
 
-    err = clEnqueueReadBuffer(contextInfo[0].queue, intensityMatrixBuffer, CL_TRUE, 0,
+    err = clEnqueueReadBuffer(contextInfo[CLINDEX].queue, intensityMatrixBuffer, CL_TRUE, 0,
         sizeof(float) * SIZE * SIZE, tempMatrix, 0, NULL, NULL);
     chkerr(err, "reading back buffer");
 
@@ -236,7 +252,6 @@ int* Diffraction::doOpenCLDiff(int* progress)
 
 Diffraction::~Diffraction()
 {
-    //    printf("Destructor called\n");
     free(tempMatrix);
     free(intensityMatrix);
 }

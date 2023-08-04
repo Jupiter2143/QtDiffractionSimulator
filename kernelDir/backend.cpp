@@ -36,13 +36,20 @@ BackEnd::BackEnd()
 {
     QFile file(":/kernel/kernelDir/kernel.cl");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        fprintf(stderr, "Cannot open kernel file\n");
+        throw std::exception("Cannot open kernel file");
     } else {
         QByteArray kernelSource = file.readAll();
         memcpy(buffer, kernelSource.data(), kernelSource.size());
-        initOpenCL(buffer);
         file.close();
     }
+}
+
+void BackEnd::initOpenCL()
+{
+    if (hasInitOpenCL)
+        return;
+    Diffraction::initOpenCL(buffer);
+    hasInitOpenCL = true;
 }
 
 QImage BackEnd::createImage(int width, int height, int* dataArray)
@@ -62,7 +69,6 @@ QImage BackEnd::createImage(int width, int height, int* dataArray)
         }
     }
     QImage image((uchar*)rgbData, width, height, QImage::Format_RGB32);
-    //    image.save("diffraction.png", "PNG");
     return image;
 }
 

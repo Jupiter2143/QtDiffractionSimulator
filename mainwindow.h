@@ -26,6 +26,7 @@ public:
     void initTableView();
     void initGraphicsView();
     void initQuickWidget();
+    void initUI();
     void initConnect();
     void collectData();
     ~MainWindow();
@@ -48,6 +49,8 @@ private slots:
     void on_actHelp_triggered();
 
     void on_actAbout_triggered();
+
+    void on_actInit_triggered();
 
 private:
     Ui::MainWindow* ui;
