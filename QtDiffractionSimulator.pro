@@ -35,7 +35,6 @@ FORMS += \
 RESOURCES += \
     res.qrc
 
-#resources.files += Mymodel.qml
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL

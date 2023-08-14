@@ -3,6 +3,8 @@
 !.gitignore
 !lib
 !lib/**/*
+!meshes
+!meshes/**/*
 !classDir
 !classDir/**/*
 !kernelDir

@@ -1,7 +1,16 @@
 <RCC>
     <qresource prefix="/qml">
         <file>sourceDir/3D.qml</file>
-        <file>sourceDir/Mymodel.qml</file>
+        <file>meshes/bezierCurve_001.mesh</file>
+        <file>meshes/bezierCurve_002.mesh</file>
+        <file>meshes/bg1.png</file>
+        <file>meshes/cube.mesh</file>
+        <file>meshes/cube_001.mesh</file>
+        <file>meshes/cube_002.mesh</file>
+        <file>meshes/plane.mesh</file>
+        <file>meshes/text_001.mesh</file>
+        <file>meshes/text_002.mesh</file>
+        <file>meshes/text_003.mesh</file>
     </qresource>
     <qresource prefix="/kernel">
         <file>kernelDir/kernel.cl</file>
