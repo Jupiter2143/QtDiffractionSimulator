@@ -1,11 +1,15 @@
 import QtQuick
 import QtQuick3D
+import QtQuick.Controls
+import QtQuick3D.Helpers
+
 
 Rectangle {
     id: window
     width: 1280
     height: 720
     visible: true
+
 
     Item {
         id: none
@@ -30,17 +34,39 @@ Rectangle {
         z: parent.z + 1
         opacity: 0.3
         anchors.fill: parent
-        source: "qrc:/qml/meshes/bg1.png"
+//        source: "qrc:/qml/meshes/bg1.png"
         fillMode: Image.PreserveAspectCrop
     }
     View3D {
         id: view
         anchors.fill: parent
+        environment: ExtendedSceneEnvironment {
+            id: env
+            backgroundMode: SceneEnvironment.SkyBox
+            lightProbe: Texture {
+                textureData: ProceduralSkyTextureData{}
+            }
+            InfiniteGrid {
+                visible: helper.gridEnabled
 
-        environment: SceneEnvironment {
-            clearColor: "#00192e"
-            backgroundMode: SceneEnvironment.Color
+            }
+            skyboxBlurAmount: 0.1
+            exposure: 1.0
+            lensFlareBloomBias: 2.75
+            lensFlareApplyDirtTexture: true
+            lensFlareApplyStarburstTexture: true
+            lensFlareCameraDirection: view3D.camera.forward
+            lutTexture: lutSourceTexture
+
+            fog: Fog {
+            }
         }
+        QtObject{
+            id:helper
+            property bool gridEnabled: gridButton.checked
+
+        }
+
         Node {
             id: cameraNode
             eulerRotation.x: -17
@@ -125,15 +151,7 @@ Rectangle {
             }
         }
 
-        Model {
-            id: plane
-            position: Qt.vector3d(70, -19.4925, 10)
-            rotation: Qt.quaternion(0.707107, -0.707107, 0, 0)
-            scale: Qt.vector3d(315.555, 315.555, 315.555)
-            source: "qrc:/qml/meshes/plane.mesh"
-            objectName: "Plane"
-            materials: material_005_material
-        }
+
         PointLight {
             id: point_light_1
             position: Qt.vector3d(0, 126.276, -18.92799)
@@ -284,4 +302,16 @@ Rectangle {
             baseColor: "#FF0000"
         }
     }
+    Button{
+        id:gridButton
+        visible: true
+        x:0
+        y:0
+        z: window.z+1
+        text:"Show Grid"
+        focusPolicy: Qt.NoFocus
+        checkable: true
+        checked: false
+    }
+
 }
