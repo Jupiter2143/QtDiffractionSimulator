@@ -11,11 +11,12 @@ MainWindow::MainWindow(QWidget* parent)
     ui->setupUi(this);
 
     initBackEnd();
-
+    initStatusBar();
     initMenu();
     initModel();
     initTableView();
     initGraphicsView();
+    initRasterWindow();
     initQuickWidget();
     initConnect();
     initUI();
@@ -26,6 +27,22 @@ void MainWindow::initBackEnd()
     thread = new QThread();
     backEnd = new BackEnd();
     backEnd->moveToThread(thread);
+}
+
+void MainWindow::initStatusBar()
+{
+    label_1 = new QLabel();
+    label_2 = new QLabel();
+    label_3 = new QLabel();
+    label_4 = new QLabel();
+    label_1->setMinimumWidth(this->width() / 4);
+    label_2->setMinimumWidth(this->width() / 4);
+    label_3->setMinimumWidth(this->width() / 4);
+    label_4->setMinimumWidth(this->width() / 4);
+    ui->statusbar->addWidget(label_1);
+    ui->statusbar->addWidget(label_2);
+    ui->statusbar->addWidget(label_3);
+    ui->statusbar->addWidget(label_4);
 }
 
 void MainWindow::initMenu()
@@ -69,13 +86,20 @@ void MainWindow::initTableView()
 void MainWindow::initGraphicsView()
 {
     viewWindow = new ViewWindow(this);
-    graphicsView = viewWindow->view;
+    QPixmap jetMapPixmap(":/res/sourceDir/jetMap.png");
+    ui->jetMapLabel->setPixmap(jetMapPixmap);
+}
+
+void MainWindow::initRasterWindow()
+{
+    rasterWindow = new RasterWindow(this);
 }
 
 void MainWindow::initQuickWidget()
 {
     quickWidget = new QQuickWidget();
     quickWidget->setSource(QUrl("qrc:/qml/sourceDir/3D.qml"));
+    quickWidget->setWindowIcon(QIcon(":/res/sourceDir/laser.png"));
     root = quickWidget->rootObject();
 }
 
@@ -84,13 +108,15 @@ void MainWindow::initUI()
     ui->thresholdLabel->setVisible(false);
     ui->horizontalSlider->setVisible(false);
     dialog = new Dialog(this);
-    ui->scaleLabel->setToolTip("每个像素代表的实际物理长度");
+    ui->scaleLabel->setToolTip("输出图像中每个像素代表的实际物理长度");
 }
 
 void MainWindow::initConnect()
 {
 
-    connect(graphicsView, &MyGraphicsView::status, this,
+    connect(ui->graphicsView, &MyGraphicsView::status, this,
+        &MainWindow::updateStatusBar);
+    connect(viewWindow->view, &MyGraphicsView::status, this,
         &MainWindow::updateStatusBar);
     connect(backEnd, &BackEnd::workDone, this, &MainWindow::updateUI);
 }
@@ -142,18 +168,19 @@ MainWindow::~MainWindow()
     delete thread;
 }
 
-void MainWindow::updateUI(QImage* image)
+void MainWindow::updateUI(QImage* image, int* dataArray)
 {
     timeEnd = std::chrono::system_clock::now();
     elapsed_seconds = timeEnd - timeStart;
     printf("elapsed time: %f\n", elapsed_seconds.count());
-    ui->plainTextEdit->appendPlainText(
-        QString("Cost: %1 s").arg(elapsed_seconds.count()));
     currentImage = *image;
+    currentDataArray = dataArray;
     QPixmap pixmap = QPixmap::fromImage(currentImage);
-    graphicsView->scene->addPixmap(pixmap);
+    ui->graphicsView->scene->addPixmap(pixmap);
+    viewWindow->view->scene->addPixmap(pixmap);
     ui->actStart->setEnabled(true);
-    viewWindow->show();
+    QString message = "用时: " + QString::number(elapsed_seconds.count(), 'f', 3) + " s";
+    label_4->setText(message);
 }
 
 void MainWindow::updateStatusBar(float x, float y)
@@ -163,9 +190,16 @@ void MainWindow::updateStatusBar(float x, float y)
     float FX = X * ui->scaleBox->value();
     float FY = Y * ui->scaleBox->value();
     QString message1 = "坐标: (" + QString::number(X, 'f', 2) + ", " + QString::number(Y, 'f', 2) + ") ";
-    QString message2 = "物理坐标: (" + QString::number(FX, 'f', 2) + ", " + QString::number(FY, 'f', 2) + ") ";
-    ui->statusbar->showMessage(message1 + message2 + ui->scaleBox->suffix().trimmed());
-    viewWindow->statusBar()->showMessage(message1 + message2 + ui->scaleBox->suffix().trimmed());
+    QString message2 = "物理坐标: (" + QString::number(FX, 'f', 2) + ", " + QString::number(FY, 'f', 2) + ") " + ui->scaleBox->suffix().trimmed();
+    QString message3;
+    if (currentDataArray != nullptr && x >= 0 && x < 1024 && y >= 0 && y < 1024) {
+        message3 = "亮度: " + QString::number(currentDataArray[(int)y * 1024 + (int)x]);
+    } else {
+        message3 = "亮度: 0";
+    }
+    label_1->setText(message1);
+    label_2->setText(message2);
+    label_3->setText(message3);
 }
 
 void MainWindow::on_btnAdd_clicked()
@@ -215,14 +249,11 @@ void MainWindow::on_actStart_triggered()
     else {
         try {
             if (!backEnd->hasInitOpenCL) {
-                ui->plainTextEdit->appendPlainText("Initializing OpenCL...");
                 backEnd->initOpenCL();
-                ui->plainTextEdit->appendPlainText("OpenCL initialized.");
             }
         } catch (std::exception& e) {
             printf("%s\n", e.what());
             QMessageBox::information(this, "初始化", "初始化失败！请检查OpenCL环境是否正常！");
-            ui->plainTextEdit->appendPlainText(e.what());
             ui->actStart->setEnabled(true);
             return;
         }
@@ -310,18 +341,20 @@ void MainWindow::on_actAbout_triggered()
     dialog->show();
 }
 
-void MainWindow::on_actInit_triggered()
+void MainWindow::on_actRestart_triggered()
 {
-    try {
-        if (!backEnd->hasInitOpenCL) {
-            ui->plainTextEdit->appendPlainText("Initializing OpenCL...");
-            backEnd->initOpenCL();
-            ui->plainTextEdit->appendPlainText("OpenCL initialized.");
-        }
-    } catch (std::exception& e) {
-        QMessageBox::information(this, "初始化", "初始化失败！请检查OpenCL环境是否正常！");
-        ui->plainTextEdit->appendPlainText(e.what());
-        printf("%s\n", e.what());
-        return;
-    }
+    QProcess::startDetached(QApplication::applicationFilePath());
+
+    // 关闭当前实例
+    qApp->quit();
+}
+
+void MainWindow::on_actExit_triggered()
+{
+    qApp->exit();
+}
+
+void MainWindow::on_actRaster_triggered()
+{
+    rasterWindow->show();
 }

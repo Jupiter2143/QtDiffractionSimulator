@@ -8,6 +8,7 @@ SOURCES += \
         classDir/mydoublespinbox.cpp \
         classDir/mygraphicsview.cpp \
         KernelDir/opencl.cpp \
+        windowDir/rasterwindow.cpp \
         windowDir/viewwindow.cpp
 
 QMAKE_CXXFLAGS += /openmp /Ox
@@ -21,6 +22,7 @@ HEADERS += \
     classDir/mydoublespinbox.h \
     classDir/mygraphicsview.h \
     kernelDir/opencl.h \
+    windowDir/rasterwindow.h \
     windowDir/viewwindow.h
 
 QT += core gui widgets
@@ -30,11 +32,11 @@ QT += quick quickwidgets
 FORMS += \
     windowDir/dialog.ui \
     mainwindow.ui \
+    windowDir/rasterwindow.ui \
     windowDir/viewwindow.ui
 
 RESOURCES += \
     res.qrc
-
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL

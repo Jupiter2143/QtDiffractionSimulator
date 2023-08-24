@@ -17,5 +17,7 @@
     </qresource>
     <qresource prefix="/res">
         <file>sourceDir/laser.png</file>
+        <file>sourceDir/jetMap.png</file>
+        <file>sourceDir/diff.png</file>
     </qresource>
 </RCC>

@@ -74,12 +74,14 @@ QImage BackEnd::createImage(int width, int height, int* dataArray)
 
 void BackEnd::startCPUdiff()
 {
-    image = createImage(1024, 1024, doNormalDiff());
-    emit workDone(&image);
+    int* dataArray = doNormalDiff();
+    image = createImage(1024, 1024, dataArray);
+    emit workDone(&image, dataArray);
 }
 
 void BackEnd::startGPUdiff()
 {
-    image = createImage(1024, 1024, doOpenCLDiff());
-    emit workDone(&image);
+    int* dataArray = doOpenCLDiff();
+    image = createImage(1024, 1024, dataArray);
+    emit workDone(&image, dataArray);
 }

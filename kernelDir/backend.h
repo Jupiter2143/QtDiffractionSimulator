@@ -25,7 +25,7 @@ public slots:
     void startCPUdiff();
     void startGPUdiff();
 signals:
-    void workDone(QImage* image);
+    void workDone(QImage* image, int* dataArray);
 };
 
 #endif // BACKEND_H

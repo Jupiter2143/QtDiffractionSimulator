@@ -4,6 +4,7 @@
 #include "classDir/mygraphicsview.h"
 #include "kernelDir/backend.h"
 #include "windowDir/dialog.h"
+#include "windowDir/rasterwindow.h"
 #include "windowDir/viewwindow.h"
 #include <QGraphicsScene>
 #include <QImage>
@@ -21,10 +22,12 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     void initBackEnd();
+    void initStatusBar();
     void initMenu();
     void initModel();
     void initTableView();
     void initGraphicsView();
+    void initRasterWindow();
     void initQuickWidget();
     void initUI();
     void initConnect();
@@ -32,7 +35,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void updateUI(QImage* image);
+    void updateUI(QImage* image, int* dataArray);
     void updateStatusBar(float x, float y);
     void on_btnAdd_clicked();
     void on_btnDelete_clicked();
@@ -50,11 +53,19 @@ private slots:
 
     void on_actAbout_triggered();
 
-    void on_actInit_triggered();
+    void on_actRestart_triggered();
+
+    void on_actExit_triggered();
+
+    void on_actRaster_triggered();
 
 private:
     Ui::MainWindow* ui;
     BackEnd* backEnd;
+    QLabel* label_1;
+    QLabel* label_2;
+    QLabel* label_3;
+    QLabel* label_4;
     QMenu* menu1;
     QThread* thread;
     QStandardItemModel* model;
@@ -64,9 +75,11 @@ private:
     std::chrono::duration<double> elapsed_seconds;
     QQuickItem* root;
     ViewWindow* viewWindow;
+    RasterWindow* rasterWindow;
     QQuickWidget* quickWidget;
-    MyGraphicsView* graphicsView;
+    //    MyGraphicsView* graphicsView;
     QImage currentImage;
+    int* currentDataArray = nullptr;
     Dialog* dialog;
 };
 

@@ -11,9 +11,8 @@ MyGraphicsView::MyGraphicsView(QWidget* parent)
     setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing, true);
     scene = new QGraphicsScene(this);
 
-    //    QPixmap pixmap("diffraction.png");
-    //    scene->addPixmap(pixmap);
-
+    QPixmap pixmap(":/res/sourceDir/diff.png");
+    scene->addPixmap(pixmap);
     setScene(scene);
 }
 
