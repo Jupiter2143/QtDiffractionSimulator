@@ -109,6 +109,8 @@ void MainWindow::initUI()
     ui->horizontalSlider->setVisible(false);
     dialog = new Dialog(this);
     ui->scaleLabel->setToolTip("输出图像中每个像素代表的实际物理长度");
+    ui->beamShapeBox->view()->window()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    ui->beamShapeBox->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
 }
 
 void MainWindow::initConnect()
