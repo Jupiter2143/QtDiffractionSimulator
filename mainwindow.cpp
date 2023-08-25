@@ -344,8 +344,6 @@ void MainWindow::on_actAbout_triggered()
 void MainWindow::on_actRestart_triggered()
 {
     QProcess::startDetached(QApplication::applicationFilePath());
-
-    // 关闭当前实例
     qApp->quit();
 }
 
@@ -356,5 +354,16 @@ void MainWindow::on_actExit_triggered()
 
 void MainWindow::on_actRaster_triggered()
 {
+    delete rasterWindow->pixelImage;
+    rasterWindow->pixelImage = new QImage(100, 300, QImage::Format_RGB32);
+    QPainter painter(rasterWindow->pixelImage);
+    rasterWindow->pixelImage->fill(Qt::gray);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(Qt::blue);
+    painter.setPen(Qt::black);
+    painter.drawEllipse(QPoint(150, 150), 100, 100);
+    painter.setBrush(Qt::green);
+    painter.drawEllipse(QPoint(150, 150), 80, 80);
+    rasterWindow->updatePixelImage();
     rasterWindow->show();
 }

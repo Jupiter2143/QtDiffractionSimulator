@@ -14,22 +14,16 @@ RasterWindow::RasterWindow(QWidget* parent)
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     scene->setSceneRect(0, 0, 1024, 768);
-    drawPixel();
-    QPixmap pixmap = QPixmap::fromImage(*pixelImage);
+    pixelImage = new QImage(300, 300, QImage::Format_ARGB32);
+    pixelImage->fill(Qt::gray);
+    pixmap = QPixmap::fromImage(*pixelImage);
     scene->setBackgroundBrush(pixmap);
 }
 
-void RasterWindow::drawPixel()
+void RasterWindow::updatePixelImage()
 {
-    pixelImage = new QImage(300, 300, QImage::Format_ARGB32);
-    pixelImage->fill(Qt::transparent);
-    QPainter painter(pixelImage);
-    painter.setRenderHint(QPainter::Antialiasing);
-    int radius = 100;
-    QPoint center(150, 150);
-    painter.setBrush(Qt::blue);
-    painter.setPen(Qt::black);
-    painter.drawEllipse(center, radius, radius);
+    pixmap = QPixmap::fromImage(*pixelImage);
+    scene->setBackgroundBrush(pixmap);
 }
 
 RasterWindow::~RasterWindow()

@@ -13,13 +13,14 @@ class RasterWindow : public QMainWindow {
 
 public:
     explicit RasterWindow(QWidget* parent = nullptr);
-    void drawPixel();
+    void updatePixelImage();
     ~RasterWindow();
+    QImage* pixelImage;
 
 private:
     Ui::RasterWindow* ui;
     QGraphicsScene* scene;
-    QImage* pixelImage;
+    QPixmap pixmap;
 };
 
 #endif // RASTERWINDOW_H
