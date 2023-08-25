@@ -1,12 +1,37 @@
 import QtQuick
 import QtQuick3D
+import QtQuick.Dialogs
+import QtQuick.Controls
+
 
 Rectangle {
     id: window
-    width: 1280
+    width: 720*1.618
     height: 720
     visible: true
 
+    MessageDialog {
+        text: "The document has been modified."
+        informativeText: "Do you want to save your changes?"
+        buttons: MessageDialog.Ok | MessageDialog.Cancel
+
+        onAccepted: Qt.quit()
+    }
+    StackView{
+
+    }
+
+
+
+       MessageDialog {
+           id: messageDialog
+           title: "提示"
+           text: "该物体被选中啦"
+           visible: false
+           onAccepted: {
+               visible = false
+           }
+       }
     Item {
         id: none
         anchors.fill: parent
@@ -55,7 +80,6 @@ Rectangle {
                 clipFar: 800
             }
         }
-
         Model {
             id: laser_source
             position: Qt.vector3d(174.136, 16.2984, -1.59588)
@@ -68,6 +92,8 @@ Rectangle {
             materials: {
                 laser_source.isPicked ? material_clicked : laser_body_material
             }
+
+
         }
         Model {
             id: cube_001
@@ -81,7 +107,6 @@ Rectangle {
             materials: {
                 cube_001.isPicked ? material_clicked : material_006_material
             }
-            //                    receivesShadows: true
         }
         Model {
             id: beam_01
@@ -114,7 +139,7 @@ Rectangle {
         Model {
             id: phone
             position: Qt.vector3d(17.0699, 10.2998, -5.08116)
-            rotation: Qt.quaternion(0.0445037, 0.144431, 0.00981306, 0.988465)
+            rotation: Qt.quaternion(0.004537, 0.144431, 0.00981306, 0.988465)
             scale: Qt.vector3d(29.8427, 29.8427, 29.8427)
             source: "qrc:/qml/meshes/cube.mesh"
             objectName: "Phone"
@@ -129,7 +154,7 @@ Rectangle {
             id: plane
             position: Qt.vector3d(70, -19.4925, 10)
             rotation: Qt.quaternion(0.707107, -0.707107, 0, 0)
-            scale: Qt.vector3d(315.555, 315.555, 315.555)
+            scale: Qt.vector3d(450,450,450)
             source: "qrc:/qml/meshes/plane.mesh"
             objectName: "Plane"
             materials: material_005_material
@@ -160,28 +185,25 @@ Rectangle {
             id: text_
             position: Qt.vector3d(184.949, -19.4951, -39.195)
             rotation: Qt.quaternion(-0.00780069, 0.00780069, 0.707064, 0.707064)
-            scale: Qt.vector3d(44.6816, 44.6816, 44.6816)
+            scale: Qt.vector3d(30, 30, 30)
             source: "qrc:/qml/meshes/text_001.mesh"
             materials: defaultMaterial_material
-            //                    materials: material_005_material
         }
         Model {
             id: text_001
             position: Qt.vector3d(0.0935555, -12.6789, -49.8422)
             rotation: Qt.quaternion(-0.00780069, 0.00780069, 0.707064, 0.707064)
-            scale: Qt.vector3d(44.6816, 44.6816, 44.6816)
+            scale: Qt.vector3d(30,30,30)
             source: "qrc:/qml/meshes/text_002.mesh"
             materials: defaultMaterial_material
-            //                    materials: material_005_material
         }
         Model {
             id: text_002
             position: Qt.vector3d(40.5972, -13.8482, -129.779)
             rotation: Qt.quaternion(-0.00780069, 0.00780069, 0.707064, 0.707064)
-            scale: Qt.vector3d(35.4778, 35.4778, 35.4779)
+            scale: Qt.vector3d(30,30,30)
             source: "qrc:/qml/meshes/text_003.mesh"
             materials: defaultMaterial_material
-            //                    materials: material_005_material
         }
         MouseArea {
             id: mouse
@@ -212,7 +234,6 @@ Rectangle {
                                }
             onClicked: mouse => {
                            // Get screen coordinates of the click
-                           //                    name.text = "萤幕位置: (" + mouse.x + ", " + mouse.y + ")"
                            var result = view.pick(mouse.x, mouse.y)
                            if (result.objectHit) {
                                var pickedObject = result.objectHit
