@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>929</width>
-    <height>797</height>
+    <height>803</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,7 @@
     <normaloff>:/res/sourceDir/laser.png</normaloff>:/res/sourceDir/laser.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">font-family: Consolas;
-font-size: 13px;
-
-QMainWindow {
+   <string notr="true">QMainWindow {
     background-color: #E3F2FD; /* 浅蓝色背景 */
 }
 
@@ -517,7 +514,7 @@ QComboBox::drop-down {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>236</width>
+         <width>245</width>
          <height>850</height>
         </rect>
        </property>
@@ -567,8 +564,7 @@ QComboBox::drop-down {
                 <enum>Qt::DefaultContextMenu</enum>
                </property>
                <property name="styleSheet">
-                <string notr="true">font-family: Consolas;
- font-size: 13px;</string>
+                <string notr="true"/>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -619,8 +615,7 @@ QComboBox::drop-down {
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font-family: Consolas;
- font-size: 13px;</string>
+                <string notr="true"/>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -859,12 +854,6 @@ QComboBox::drop-down {
                  <height>16777215</height>
                 </size>
                </property>
-               <property name="font">
-                <font>
-                 <family>Consolas</family>
-                 <pointsize>-1</pointsize>
-                </font>
-               </property>
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
@@ -874,11 +863,11 @@ QComboBox::drop-down {
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
+               <property name="prefix">
+                <string/>
+               </property>
                <property name="suffix">
                 <string> mm</string>
-               </property>
-               <property name="decimals">
-                <number>3</number>
                </property>
                <property name="value">
                 <double>1.000000000000000</double>
@@ -1485,7 +1474,7 @@ QComboBox::drop-down {
      <x>0</x>
      <y>0</y>
      <width>929</width>
-     <height>20</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -394,11 +394,11 @@ void MainWindow::on_actRaster_triggered()
             painter.drawRect(x - l / 2 + width / 2, y - w / 2 + height * 3 / 2, l, w);
         }
         if (shape == 2) {
-            painter.drawEllipse(QPoint(x + width / 2, y + height / 2), 10, 10);
-            painter.drawEllipse(QPoint(x - width / 2, y + height / 2), 10, 10);
-            painter.drawEllipse(QPoint(x + width / 2, y - height / 2), 10, 10);
-            painter.drawEllipse(QPoint(x + width * 3 / 2, y + height / 2), 10, 10);
-            painter.drawEllipse(QPoint(x + width / 2, y + height * 3 / 2), 10, 10);
+            painter.drawEllipse(QPoint(x + width / 2, y + height / 2), 3, 3);
+            painter.drawEllipse(QPoint(x - width / 2, y + height / 2), 3, 3);
+            painter.drawEllipse(QPoint(x + width / 2, y - height / 2), 3, 3);
+            painter.drawEllipse(QPoint(x + width * 3 / 2, y + height / 2), 3, 3);
+            painter.drawEllipse(QPoint(x + width / 2, y + height * 3 / 2), 3, 3);
         }
     }
     QPen pen(Qt::DashLine); // 设置为虚线样式
