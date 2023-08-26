@@ -98,7 +98,7 @@ Rectangle {
         Model {
             id: cube_001
             position: Qt.vector3d(100.479, 20.461, -108.245)
-            rotation: Qt.quaternion(0.947253, 0.0133086, -0.319867, 0.0148305)
+            rotation: Qt.quaternion(0.946928, -0.00546786, -0.321297, 0.00809321)
             scale: Qt.vector3d(28.8999, 29.6333, 4.34995)
             source: "qrc:/qml/meshes/cube_001.mesh"
             objectName: "Screen"
