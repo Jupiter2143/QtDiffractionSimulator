@@ -10,6 +10,9 @@ RasterWindow::RasterWindow(QWidget* parent)
     , ui(new Ui::RasterWindow)
 {
     ui->setupUi(this);
+    Qt::WindowFlags flags = windowFlags();
+    flags &= ~Qt::WindowMinMaxButtonsHint; // 关闭最大化和最小化按钮选项
+    setWindowFlags(flags);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);

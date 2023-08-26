@@ -18,7 +18,9 @@
     <normaloff>:/res/sourceDir/laser.png</normaloff>:/res/sourceDir/laser.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">
+   <string notr="true">font-family: Consolas;
+font-size: 13px;
+
 QMainWindow {
     background-color: #E3F2FD; /* 浅蓝色背景 */
 }
@@ -47,8 +49,7 @@ QMenuBar::item:pressed {
     background-color: #2196F3; /* 菜单项被选中时的蓝色背景 */
 }
 
-font-family: Consolas;
-font-size: 13px;
+
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -1484,7 +1485,7 @@ QComboBox::drop-down {
      <x>0</x>
      <y>0</y>
      <width>929</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

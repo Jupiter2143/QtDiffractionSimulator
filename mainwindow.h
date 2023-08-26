@@ -16,6 +16,8 @@ namespace Ui {
 class MainWindow;
 }
 
+void moveToCenter(QMainWindow* w);
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 

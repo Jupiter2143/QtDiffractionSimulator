@@ -6,6 +6,9 @@ ViewWindow::ViewWindow(QWidget* parent)
     , ui(new Ui::ViewWindow)
 {
     ui->setupUi(this);
+    Qt::WindowFlags flags = windowFlags();
+    flags &= ~Qt::WindowMinMaxButtonsHint; // 关闭最大化和最小化按钮选项
+    setWindowFlags(flags);
     view = ui->graphicsView;
     group = new QGraphicsItemGroup;
     QPen pen(Qt::lightGray, 1, Qt::DotLine);

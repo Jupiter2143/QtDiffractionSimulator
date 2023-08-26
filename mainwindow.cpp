@@ -86,6 +86,7 @@ void MainWindow::initTableView()
 void MainWindow::initGraphicsView()
 {
     viewWindow = new ViewWindow(this);
+    moveToCenter(viewWindow);
     QPixmap jetMapPixmap(":/res/sourceDir/jetMap.png");
     ui->jetMapLabel->setPixmap(jetMapPixmap);
 }
@@ -93,6 +94,7 @@ void MainWindow::initGraphicsView()
 void MainWindow::initRasterWindow()
 {
     rasterWindow = new RasterWindow(this);
+    moveToCenter(rasterWindow);
 }
 
 void MainWindow::initQuickWidget()
@@ -357,15 +359,64 @@ void MainWindow::on_actExit_triggered()
 void MainWindow::on_actRaster_triggered()
 {
     delete rasterWindow->pixelImage;
-    rasterWindow->pixelImage = new QImage(100, 300, QImage::Format_RGB32);
+    float m = fmax(ui->xSpacingBox->value(), ui->ySpacingBox->value());
+    float ratio = 300.0f / m;
+    int width = ui->xSpacingBox->value() * ratio;
+    int height = ui->ySpacingBox->value() * ratio;
+    rasterWindow->pixelImage = new QImage(width, height, QImage::Format_RGB32);
     QPainter painter(rasterWindow->pixelImage);
-    rasterWindow->pixelImage->fill(Qt::gray);
+    rasterWindow->pixelImage->fill(QColor(173, 216, 230));
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(Qt::blue);
-    painter.setPen(Qt::black);
-    painter.drawEllipse(QPoint(150, 150), 100, 100);
-    painter.setBrush(Qt::green);
-    painter.drawEllipse(QPoint(150, 150), 80, 80);
+    painter.setPen(Qt::transparent);
+    QList<QColor> colors;
+    colors << Qt::red << Qt::green << Qt::blue << Qt::cyan << Qt::magenta;
+    for (int i = 0; i < model->rowCount(); ++i) {
+        QColor color = colors[i % colors.size()];
+        painter.setBrush(color);
+        int shape = model->index(i, 0).data(Qt::UserRole).toInt();
+        int l = model->index(i, 1).data(Qt::EditRole).toFloat() * ratio;
+        int w = model->index(i, 2).data(Qt::EditRole).toFloat() * ratio;
+        int rho = model->index(i, 3).data(Qt::EditRole).toFloat() * ratio;
+        int x = model->index(i, 4).data(Qt::EditRole).toFloat() * ratio;
+        int y = model->index(i, 5).data(Qt::EditRole).toFloat() * ratio;
+        if (shape == 0) {
+            painter.drawEllipse(QPoint(x + width / 2, y + height / 2), rho, rho);
+            painter.drawEllipse(QPoint(x - width / 2, y + height / 2), rho, rho);
+            painter.drawEllipse(QPoint(x + width / 2, y - height / 2), rho, rho);
+            painter.drawEllipse(QPoint(x + width * 3 / 2, y + height / 2), rho, rho);
+            painter.drawEllipse(QPoint(x + width / 2, y + height * 3 / 2), rho, rho);
+        }
+        if (shape == 1) {
+            painter.drawRect(x - l / 2 + width / 2, y - w / 2 + height / 2, l, w);
+            painter.drawRect(x - l / 2 - width / 2, y - w / 2 + height / 2, l, w);
+            painter.drawRect(x - l / 2 + width / 2, y - w / 2 - height / 2, l, w);
+            painter.drawRect(x - l / 2 + width * 3 / 2, y - w / 2 + height / 2, l, w);
+            painter.drawRect(x - l / 2 + width / 2, y - w / 2 + height * 3 / 2, l, w);
+        }
+        if (shape == 2) {
+            painter.drawEllipse(QPoint(x + width / 2, y + height / 2), 10, 10);
+            painter.drawEllipse(QPoint(x - width / 2, y + height / 2), 10, 10);
+            painter.drawEllipse(QPoint(x + width / 2, y - height / 2), 10, 10);
+            painter.drawEllipse(QPoint(x + width * 3 / 2, y + height / 2), 10, 10);
+            painter.drawEllipse(QPoint(x + width / 2, y + height * 3 / 2), 10, 10);
+        }
+    }
+    QPen pen(Qt::DashLine); // 设置为虚线样式
+    pen.setColor(Qt::black); // 设置颜色
+    pen.setWidth(1); // 设置线宽
+    painter.setPen(pen);
+    painter.setBrush(Qt::NoBrush);
+    painter.drawRect(0, 0, width + 1, height + 1);
     rasterWindow->updatePixelImage();
     rasterWindow->show();
+}
+
+void moveToCenter(QMainWindow* w)
+{
+    QScreen* screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->availableGeometry(); // 考虑任务栏的可用区域
+    int taskbarHeight = screenGeometry.height() - screen->geometry().height();
+    int x = (screenGeometry.width() - w->width()) / 2;
+    int y = (screenGeometry.height() - w->height() + taskbarHeight) / 2;
+    w->move(x, y);
 }
