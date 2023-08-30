@@ -11,6 +11,7 @@
         <file>meshes/text_001.mesh</file>
         <file>meshes/text_002.mesh</file>
         <file>meshes/text_003.mesh</file>
+        <file>sourceDir/CustomSlider.qml</file>
     </qresource>
     <qresource prefix="/kernel">
         <file>kernelDir/kernel.cl</file>
@@ -19,5 +20,7 @@
         <file>sourceDir/laser.png</file>
         <file>sourceDir/jetMap.png</file>
         <file>sourceDir/diff.png</file>
+        <file>sourceDir/icon_settings.png</file>
+        <file>sourceDir/dot.png</file>
     </qresource>
 </RCC>

@@ -9,7 +9,6 @@ int main(int argc, char* argv[])
     freopen("log.txt", "w", stdout);
     freopen("err.txt", "w", stderr);
     QApplication app(argc, argv);
-
     // 设置英文字体
     QFont englishFont("Consolas", 10);
     app.setFont(englishFont);

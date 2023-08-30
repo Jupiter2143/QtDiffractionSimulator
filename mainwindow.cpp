@@ -20,6 +20,11 @@ MainWindow::MainWindow(QWidget* parent)
     initQuickWidget();
     initConnect();
     initUI();
+
+    connect(quickWidget->rootObject(),
+            SIGNAL(inAngleChangedSignal(double)),
+            this,
+            SLOT(connectQuickwidgetToMainwindow(double)));
 }
 
 void MainWindow::initBackEnd()
@@ -419,4 +424,10 @@ void moveToCenter(QMainWindow* w)
     int x = (screenGeometry.width() - w->width()) / 2;
     int y = (screenGeometry.height() - w->height() + taskbarHeight) / 2;
     w->move(x, y);
+}
+
+void MainWindow::connectQuickwidgetToMainwindow(double value)
+{
+    ui->thetaBox->setValue(value);
+    qDebug() << "Received value from QML:" << value;
 }

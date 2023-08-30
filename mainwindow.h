@@ -16,9 +16,10 @@ namespace Ui {
 class MainWindow;
 }
 
-void moveToCenter(QMainWindow* w);
+void moveToCenter(QMainWindow *w);
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
@@ -34,6 +35,7 @@ public:
     void initUI();
     void initConnect();
     void collectData();
+
     ~MainWindow();
 
 private slots:
@@ -60,6 +62,10 @@ private slots:
     void on_actExit_triggered();
 
     void on_actRaster_triggered();
+    //edit at 8.28.2023 QMainWindow *w, QQuickWidget *q
+
+public slots:
+    void connectQuickwidgetToMainwindow(double value);
 
 private:
     Ui::MainWindow* ui;

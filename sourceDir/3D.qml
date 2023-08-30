@@ -2,36 +2,15 @@ import QtQuick
 import QtQuick3D
 import QtQuick.Dialogs
 import QtQuick.Controls
+import QtQuick3D.Particles3D
 
-
+//Window
 Rectangle {
     id: window
-    width: 720*1.618
+    width: 720 * 1.618
     height: 720
     visible: true
 
-    MessageDialog {
-        text: "The document has been modified."
-        informativeText: "Do you want to save your changes?"
-        buttons: MessageDialog.Ok | MessageDialog.Cancel
-
-        onAccepted: Qt.quit()
-    }
-    StackView{
-
-    }
-
-
-
-       MessageDialog {
-           id: messageDialog
-           title: "提示"
-           text: "该物体被选中啦"
-           visible: false
-           onAccepted: {
-               visible = false
-           }
-       }
     Item {
         id: none
         anchors.fill: parent
@@ -92,27 +71,12 @@ Rectangle {
             materials: {
                 laser_source.isPicked ? material_clicked : laser_body_material
             }
-
-
-        }
-        Model {
-            id: cube_001
-            position: Qt.vector3d(100.479, 20.461, -108.245)
-            rotation: Qt.quaternion(0.946928, -0.00546786, -0.321297, 0.00809321)
-            scale: Qt.vector3d(28.8999, 29.6333, 4.34995)
-            source: "qrc:/qml/meshes/cube_001.mesh"
-            objectName: "Screen"
-            pickable: true
-            property bool isPicked: false
-            materials: {
-                cube_001.isPicked ? material_clicked : material_006_material
-            }
         }
         Model {
             id: beam_01
             position: Qt.vector3d(80.6691, 8.91805, -5.74462)
             rotation: Qt.quaternion(0.69381, -0.719738, -0.0235141, -0.00725219)
-            scale: Qt.vector3d(103.859, 103.859, 103.859)
+            scale: Qt.vector3d(100, 100, 100) //origin 103.859
             source: "qrc:/qml/meshes/bezierCurve_001.mesh"
             objectName: "Beam_01"
             pickable: true
@@ -125,9 +89,9 @@ Rectangle {
 
         Model {
             id: beam_02
-            position: Qt.vector3d(59.5347, 9.46301, -57.7307)
+            position: Qt.vector3d(55.5347, 9.46301, -53.7307)
             rotation: Qt.quaternion(0.632403, -0.648441, 0.286342, 0.312409)
-            scale: Qt.vector3d(103.859, 103.859, 103.859)
+            scale: Qt.vector3d(103, 103, 103)
             source: "qrc:/qml/meshes/bezierCurve_002.mesh"
             objectName: "Beam_02"
             pickable: true
@@ -136,6 +100,21 @@ Rectangle {
                 beam_02.isPicked ? material_clicked : laser_beam_material_material
             }
         }
+        Model {
+            id: cube_001
+            position: Qt.vector3d(100.479, 20.461, -108.245)
+            rotation: Qt.quaternion(0.946928, -0.00546786, -0.321297,
+                                    0.00809321)
+            scale: Qt.vector3d(28.8999, 29.6333, 4.34995)
+            source: "qrc:/qml/meshes/cube_001.mesh"
+            objectName: "Screen"
+            pickable: true
+            property bool isPicked: false
+            materials: {
+                cube_001.isPicked ? material_clicked : material_006_material
+            }
+        }
+
         Model {
             id: phone
             position: Qt.vector3d(17.0699, 10.2998, -5.08116)
@@ -154,7 +133,7 @@ Rectangle {
             id: plane
             position: Qt.vector3d(70, -19.4925, 10)
             rotation: Qt.quaternion(0.707107, -0.707107, 0, 0)
-            scale: Qt.vector3d(450,450,450)
+            scale: Qt.vector3d(450, 450, 450)
             source: "qrc:/qml/meshes/plane.mesh"
             objectName: "Plane"
             materials: material_005_material
@@ -193,7 +172,7 @@ Rectangle {
             id: text_001
             position: Qt.vector3d(0.0935555, -12.6789, -49.8422)
             rotation: Qt.quaternion(-0.00780069, 0.00780069, 0.707064, 0.707064)
-            scale: Qt.vector3d(30,30,30)
+            scale: Qt.vector3d(30, 30, 30)
             source: "qrc:/qml/meshes/text_002.mesh"
             materials: defaultMaterial_material
         }
@@ -201,7 +180,7 @@ Rectangle {
             id: text_002
             position: Qt.vector3d(40.5972, -13.8482, -129.779)
             rotation: Qt.quaternion(-0.00780069, 0.00780069, 0.707064, 0.707064)
-            scale: Qt.vector3d(30,30,30)
+            scale: Qt.vector3d(30, 30, 30)
             source: "qrc:/qml/meshes/text_003.mesh"
             materials: defaultMaterial_material
         }
@@ -240,12 +219,109 @@ Rectangle {
                                pickedObject.isPicked = !pickedObject.isPicked
 
                                if (pickedObject === beam_01) {
-                                   beam_02.isPicked = beam_01.isPicked
+                                   laser_source.isPicked = beam_02.isPicked = beam_01.isPicked
                                } else if (pickedObject === beam_02) {
-                                   beam_01.isPicked = beam_02.isPicked
+                                   laser_source.isPicked = beam_01.isPicked = beam_02.isPicked
+                               } else if (pickedObject === laser_source) {
+                                   beam_01.isPicked = beam_02.isPicked = laser_source.isPicked
                                }
                            }
                        }
+        }
+        Node {
+            id: gaugeItem
+
+            property real value: 0
+            property real needleSize: 150
+
+            SequentialAnimation on value {
+                running: true
+                loops: Animation.Infinite
+                NumberAnimation {
+                    duration: 8000
+                    to: 1
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    duration: 8000
+                    to: 0
+                    easing.type: Easing.InOutQuad
+                }
+            }
+            y: 0
+            eulerRotation.z: 90
+            eulerRotation.y: -5
+
+            Model {
+                position.x: 8
+                position.z: -13
+                position.y: 105
+                scale: Qt.vector3d(0.05 / 2,
+                                   gaugeItem.needleSize * 0.01 / 2, 0.2 / 2)
+                materials: PrincipledMaterial {
+                    baseColor: "#FF6060"
+                }
+
+                ParticleEmitter3D {
+                    y: 10
+                    scale: Qt.vector3d(0.1, 0.8, 0.1)
+                    shape: ParticleShape3D {
+                        type: ParticleShape3D.Cube
+                    }
+                    particleScale: 2.0
+                    particleScaleVariation: 1.0
+                    particleRotationVariation: Qt.vector3d(0, 0, 180)
+                    particleRotationVelocityVariation: Qt.vector3d(20, 20, 200)
+                    emitRate: 500
+                    lifeSpan: 2000
+                    lifeSpanVariation: 1000
+                }
+
+                // Needle particle system
+                // This system rotates together with the needle
+                ParticleSystem3D {
+                    id: psystemNeedle
+                    running: true
+                    visible: running
+                    SpriteParticle3D {
+                        id: needleParticle
+                        sprite: Texture {
+                            source: "qrc:/res/sourceDir/dot.png"
+                        }
+                        maxAmount: 500
+                        fadeInDuration: 50
+                        fadeOutDuration: 200
+                        //                        color: "#40808020"
+                        color: "#40DC143C"
+                        colorVariation: Qt.vector4d(0.2, 0.2, 0.0, 0.2)
+                        blendMode: SpriteParticle3D.Screen
+                    }
+
+                    ParticleEmitter3D {
+                        particle: needleParticle
+                        //                        x: -1000
+                        y: -300
+
+                        scale: Qt.vector3d(
+                                   0.8, 0.8,
+                                   0.2) //origin: scale: Qt.vector3d(0.2, 0.0, 0.2)
+                        shape: ParticleShape3D {
+                            type: ParticleShape3D.Cube
+                        }
+
+                        particleScale: 1.0 //origin particleScale: 4.0
+                        particleScaleVariation: 2.0
+                        particleEndScale: 1.0
+                        particleEndScaleVariation: 0.5
+                        velocity: VectorDirection3D {
+                            direction: Qt.vector3d(0, 110, 0)
+                            directionVariation: Qt.vector3d(10, 10, 10)
+                        }
+                        emitRate: 200
+                        lifeSpan: 1000
+                    }
+                }
+            }
         }
     }
     Item {
@@ -305,4 +381,257 @@ Rectangle {
             baseColor: "#FF0000"
         }
     }
+    Column {
+        x: parent.x + 5
+        y: parent.y + 43
+        spacing: 3
+        Rectangle {
+            width: 300
+            height: 275
+            color: {
+                (laser_source.isPicked
+                 || beam_01.isPicked) ? '#E04F4F4F' : '#004F4F4F'
+            }
+        }
+        Rectangle {
+            width: 300
+            height: 205
+            color: {
+                phone.isPicked ? '#E04F4F4F' : '#004F4F4F'
+            }
+        }
+        Rectangle {
+            width: 300
+            height: 160
+            color: {
+                cube_001.isPicked ? '#E04F4F4F' : '#004F4F4F'
+            }
+        }
+    }
+    Frame {
+        id: para_setting_frame
+        width: 300 // 设置宽度为 300
+        height: 600
+        visible: true
+        background: Rectangle {
+            color: "#20606060" // 将透明度部分设置为完全半透明
+        }
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.margins: 5
+        Column {
+            id: para_setting_area
+            spacing: 9
+            Text {
+                id: text_Hint
+                font.pixelSize: 25
+                color: "#FFFFFF"
+                text: "参数调节： "
+            }
+            Text {
+                id: text_angle
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "入射角： "
+            }
+            CustomSlider {
+                id: para_angle
+                unit: "°"
+                sliderValue: 68.590
+                fromValue: 0
+                toValue: 99.990
+                onSliderValueChanged: {
+                    inAngleChangedSignal(para_angle.sliderValue)
+                }
+            }
+            Text {
+                id: text_inAngleDistance
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "入射距离： "
+            }
+            CustomSlider {
+                id: para_inAngleDistance
+                sliderValue: 0.500
+                fromValue: 0
+                toValue: 999
+                unit: "m"
+            }
+            Text {
+                id: text_outAngleDistance
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "出射距离： "
+            }
+            CustomSlider {
+                id: para_outAngleDistance
+                sliderValue: 0.870
+                fromValue: 0
+                toValue: 999
+                unit: "m"
+            }
+            //感觉没必要了
+            //            Text {
+            //                id: text_lightSourceType
+            //                font.pixelSize: 16
+            //                color: "#FFFFFF"
+            //                text: "光源类型： "
+            //            }
+            //            Row {
+            //                spacing: 10
+            //                CustomCheckBox {
+            //                    id: lightSource_circle
+            //                    text: "圆"
+            //                    checked: true
+            //                    onCheckedChanged: {
+            //                        if (checked) {
+            //                            lightSource_rectangle.checked = false
+            //                            lightSource_point.checked = false
+            //                        }
+            //                    }
+            //                }
+            //                CustomCheckBox {
+            //                    id: lightSource_rectangle
+            //                    text: "矩形"
+            //                    checked: false
+            //                    onCheckedChanged: {
+            //                        if (checked) {
+            //                            lightSource_circle.checked = false
+            //                            lightSource_point.checked = false
+            //                        }
+            //                    }
+            //                }
+            //                CustomCheckBox {
+            //                    id: lightSource_point
+            //                    text: "点"
+            //                    checked: false
+            //                    onCheckedChanged: {
+            //                        if (checked) {
+            //                            lightSource_circle.checked = false
+            //                            lightSource_rectangle.checked = false
+            //                        }
+            //                    }
+            //                }
+            //            }
+            Text {
+                id: text_waveLength
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "波长： "
+            }
+            CustomSlider {
+                id: para_waveLength
+                sliderValue: 635
+                fromValue: 0
+                toValue: 1000
+                unit: "nm"
+            }
+            Text {
+                id: text_beamRadius
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "光束半径： "
+            }
+            CustomSlider {
+                id: para_beamRadius
+                sliderValue: 1.00
+                fromValue: 0
+                toValue: 999
+                unit: "mm"
+            }
+            Text {
+                id: text_pixelSpaceX
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "像素间距X： "
+            }
+            CustomSlider {
+                id: para_pixelSpaceX
+                sliderValue: 63.82
+                fromValue: 0
+                toValue: 999.00
+                unit: "um"
+            }
+            Text {
+                id: text_pixelSpaceY
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "像素间距Y： "
+            }
+            CustomSlider {
+                id: para_pixelSpaceY
+                sliderValue: 63.82
+                fromValue: 0
+                toValue: 999.00
+                unit: "um"
+            }
+            Text {
+                id: text_horizontalOffset
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "水平偏移： "
+            }
+            CustomSlider {
+                id: para_horizontalOffset
+                sliderValue: 0.000
+                fromValue: 0
+                toValue: 999
+                unit: "um"
+            }
+            Text {
+                id: text_vertitalOffset
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "垂直偏移： "
+            }
+            CustomSlider {
+                id: para_verticalOffset
+                sliderValue: 0.000
+                fromValue: 0
+                toValue: 999
+                unit: "um"
+            }
+            Text {
+                id: text_plottingScale
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "比例尺： "
+            }
+            CustomSlider {
+                id: para_plottingScale
+                sliderValue: 0.2
+                fromValue: 0
+                toValue: 360
+                unit: "mm"
+            }
+            Text {
+                id: text_opticalScreenX
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "光屏中心X： "
+            }
+            CustomSlider {
+                id: para_opticalScreenX
+                sliderValue: 0.000
+                fromValue: 0
+                toValue: 999
+                unit: "m"
+            }
+            Text {
+                id: text_opticalScreenY
+                font.pixelSize: 16
+                color: "#FFFFFF"
+                text: "光屏中心Y： "
+            }
+            CustomSlider {
+                id: para_opticalScreenY
+                sliderValue: 0.000
+                fromValue: 0
+                toValue: 999
+                unit: "m"
+            }
+        }
+    }
+    signal inAngleChangedSignal(double value)
+    //definition
 }
