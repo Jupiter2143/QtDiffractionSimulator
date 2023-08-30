@@ -24,7 +24,51 @@ MainWindow::MainWindow(QWidget* parent)
     connect(quickWidget->rootObject(),
             SIGNAL(inAngleChangedSignal(double)),
             this,
-            SLOT(connectQuickwidgetToMainwindow(double)));
+            SLOT(connectInAngleToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(inAngleDistanceChangedSignal(double)),
+            this,
+            SLOT(connectInAngleDistanceToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(outAngleDistanceChangedSignal(double)),
+            this,
+            SLOT(connectOutAngleDistanceToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(waveLengthChangedSignal(double)),
+            this,
+            SLOT(connectWaveLengthToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(beamRadiusChangedSignal(double)),
+            this,
+            SLOT(connectBeamRadiusToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(pixelSpaceXChangedSignal(double)),
+            this,
+            SLOT(connectPixelSpaceXToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(pixelSpaceYChangedSignal(double)),
+            this,
+            SLOT(connectPixelSpaceYToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(horizontalOffsetChangedSignal(double)),
+            this,
+            SLOT(connectHorizontalOffsetToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(vertitalOffsetChangedSignal(double)),
+            this,
+            SLOT(connectVertitalOffsetToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(plottingScaleChangedSignal(double)),
+            this,
+            SLOT(connectPlottingScaleToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(opticalScreenXChangedSignal(double)),
+            this,
+            SLOT(connectOpticalScreenXToMainwindow(double)));
+    connect(quickWidget->rootObject(),
+            SIGNAL(opticalScreenYChangedSignal(double)),
+            this,
+            SLOT(connectOpticalScreenYToMainwindow(double)));
 }
 
 void MainWindow::initBackEnd()
@@ -426,8 +470,51 @@ void moveToCenter(QMainWindow* w)
     w->move(x, y);
 }
 
-void MainWindow::connectQuickwidgetToMainwindow(double value)
+void MainWindow::connectInAngleToMainwindow(double value)
 {
     ui->thetaBox->setValue(value);
-    qDebug() << "Received value from QML:" << value;
+}
+void MainWindow::connectInAngleDistanceToMainwindow(double value)
+{
+    ui->l_0Box->setValue(value);
+}
+void MainWindow::connectOutAngleDistanceToMainwindow(double value)
+{
+    ui->L_0Box->setValue(value);
+}
+void MainWindow::connectWaveLengthToMainwindow(double value)
+{
+    ui->LambdaBox->setValue(value);
+}
+void MainWindow::connectBeamRadiusToMainwindow(double value)
+{
+    ui->beamRadiusBox->setValue(value);
+}
+void MainWindow::connectPixelSpaceXToMainwindow(double value)
+{
+    ui->xSpacingBox->setValue(value);
+}
+void MainWindow::connectPixelSpaceYToMainwindow(double value)
+{
+    ui->ySpacingBox->setValue(value);
+}
+void MainWindow::connectHorizontalOffsetToMainwindow(double value)
+{
+    ui->xOffsetBox->setValue(value);
+}
+void MainWindow::connectVertitalOffsetToMainwindow(double value)
+{
+    ui->yOffsetBox->setValue(value);
+}
+void MainWindow::connectPlottingScaleToMainwindow(double value)
+{
+    ui->scaleBox->setValue(value);
+}
+void MainWindow::connectOpticalScreenXToMainwindow(double value)
+{
+    ui->xCenterBox->setValue(value);
+}
+void MainWindow::connectOpticalScreenYToMainwindow(double value)
+{
+    ui->yCenterBox->setValue(value);
 }

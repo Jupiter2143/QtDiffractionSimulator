@@ -452,10 +452,14 @@ Rectangle {
             }
             CustomSlider {
                 id: para_inAngleDistance
+                unit: "m"
                 sliderValue: 0.500
                 fromValue: 0
                 toValue: 999
-                unit: "m"
+                onSliderValueChanged: {
+                    inAngleDistanceChangedSignal(
+                                para_inAngleDistance.sliderValue)
+                }
             }
             Text {
                 id: text_outAngleDistance
@@ -469,50 +473,11 @@ Rectangle {
                 fromValue: 0
                 toValue: 999
                 unit: "m"
+                onSliderValueChanged: {
+                    outAngleDistanceChangedSignal(
+                                para_outAngleDistance.sliderValue)
+                }
             }
-            //感觉没必要了
-            //            Text {
-            //                id: text_lightSourceType
-            //                font.pixelSize: 16
-            //                color: "#FFFFFF"
-            //                text: "光源类型： "
-            //            }
-            //            Row {
-            //                spacing: 10
-            //                CustomCheckBox {
-            //                    id: lightSource_circle
-            //                    text: "圆"
-            //                    checked: true
-            //                    onCheckedChanged: {
-            //                        if (checked) {
-            //                            lightSource_rectangle.checked = false
-            //                            lightSource_point.checked = false
-            //                        }
-            //                    }
-            //                }
-            //                CustomCheckBox {
-            //                    id: lightSource_rectangle
-            //                    text: "矩形"
-            //                    checked: false
-            //                    onCheckedChanged: {
-            //                        if (checked) {
-            //                            lightSource_circle.checked = false
-            //                            lightSource_point.checked = false
-            //                        }
-            //                    }
-            //                }
-            //                CustomCheckBox {
-            //                    id: lightSource_point
-            //                    text: "点"
-            //                    checked: false
-            //                    onCheckedChanged: {
-            //                        if (checked) {
-            //                            lightSource_circle.checked = false
-            //                            lightSource_rectangle.checked = false
-            //                        }
-            //                    }
-            //                }
-            //            }
             Text {
                 id: text_waveLength
                 font.pixelSize: 16
@@ -525,6 +490,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 1000
                 unit: "nm"
+                onSliderValueChanged: {
+                    waveLengthChangedSignal(para_waveLength.sliderValue)
+                }
             }
             Text {
                 id: text_beamRadius
@@ -538,6 +506,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 999
                 unit: "mm"
+                onSliderValueChanged: {
+                    beamRadiusChangedSignal(para_beamRadius.sliderValue)
+                }
             }
             Text {
                 id: text_pixelSpaceX
@@ -551,6 +522,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 999.00
                 unit: "um"
+                onSliderValueChanged: {
+                    pixelSpaceXChangedSignal(para_pixelSpaceX.sliderValue)
+                }
             }
             Text {
                 id: text_pixelSpaceY
@@ -564,6 +538,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 999.00
                 unit: "um"
+                onSliderValueChanged: {
+                    pixelSpaceYChangedSignal(para_pixelSpaceY.sliderValue)
+                }
             }
             Text {
                 id: text_horizontalOffset
@@ -577,6 +554,10 @@ Rectangle {
                 fromValue: 0
                 toValue: 999
                 unit: "um"
+                onSliderValueChanged: {
+                    horizontalOffsetChangedSignal(
+                                para_horizontalOffset.sliderValue)
+                }
             }
             Text {
                 id: text_vertitalOffset
@@ -590,6 +571,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 999
                 unit: "um"
+                onSliderValueChanged: {
+                    vertitalOffsetChangedSignal(para_verticalOffset.sliderValue)
+                }
             }
             Text {
                 id: text_plottingScale
@@ -603,6 +587,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 360
                 unit: "mm"
+                onSliderValueChanged: {
+                    plottingScaleChangedSignal(para_plottingScale.sliderValue)
+                }
             }
             Text {
                 id: text_opticalScreenX
@@ -616,6 +603,9 @@ Rectangle {
                 fromValue: 0
                 toValue: 999
                 unit: "m"
+                onSliderValueChanged: {
+                    opticalScreenXChangedSignal(para_opticalScreenX.sliderValue)
+                }
             }
             Text {
                 id: text_opticalScreenY
@@ -629,9 +619,23 @@ Rectangle {
                 fromValue: 0
                 toValue: 999
                 unit: "m"
+                onSliderValueChanged: {
+                    opticalScreenYChangedSignal(para_opticalScreenY.sliderValue)
+                }
             }
         }
     }
+    //声明
     signal inAngleChangedSignal(double value)
-    //definition
+    signal inAngleDistanceChangedSignal(double value)
+    signal outAngleDistanceChangedSignal(double value)
+    signal waveLengthChangedSignal(double value)
+    signal beamRadiusChangedSignal(double value)
+    signal pixelSpaceXChangedSignal(double value)
+    signal pixelSpaceYChangedSignal(double value)
+    signal horizontalOffsetChangedSignal(double value)
+    signal vertitalOffsetChangedSignal(double value)
+    signal plottingScaleChangedSignal(double value)
+    signal opticalScreenXChangedSignal(double value)
+    signal opticalScreenYChangedSignal(double value)
 }

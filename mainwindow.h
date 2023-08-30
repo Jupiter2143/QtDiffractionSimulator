@@ -65,7 +65,18 @@ private slots:
     //edit at 8.28.2023 QMainWindow *w, QQuickWidget *q
 
 public slots:
-    void connectQuickwidgetToMainwindow(double value);
+    void connectInAngleToMainwindow(double value);
+    void connectInAngleDistanceToMainwindow(double value);
+    void connectOutAngleDistanceToMainwindow(double value);
+    void connectWaveLengthToMainwindow(double value);
+    void connectBeamRadiusToMainwindow(double value);
+    void connectPixelSpaceXToMainwindow(double value);
+    void connectPixelSpaceYToMainwindow(double value);
+    void connectHorizontalOffsetToMainwindow(double value);
+    void connectVertitalOffsetToMainwindow(double value);
+    void connectPlottingScaleToMainwindow(double value);
+    void connectOpticalScreenXToMainwindow(double value);
+    void connectOpticalScreenYToMainwindow(double value);
 
 private:
     Ui::MainWindow* ui;
