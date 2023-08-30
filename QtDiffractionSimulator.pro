@@ -40,7 +40,8 @@ RESOURCES += \
 
 resources.files += \
         sourceDir/CustomSlider.qml      \
-        sourceDir/3D.qml  #以添加多个文件或者文件夹
+        sourceDir/3D.qml \
+        sourceDir/CustomSlider.qml#以添加多个文件或者文件夹
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/opencl/lib/ -lOpenCL

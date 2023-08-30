@@ -12,6 +12,7 @@
         <file>meshes/text_002.mesh</file>
         <file>meshes/text_003.mesh</file>
         <file>sourceDir/CustomSlider.qml</file>
+        <file>sourceDir/CustomCheckBox.qml</file>
     </qresource>
     <qresource prefix="/kernel">
         <file>kernelDir/kernel.cl</file>

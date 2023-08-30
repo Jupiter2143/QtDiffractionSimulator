@@ -21,6 +21,57 @@ MainWindow::MainWindow(QWidget* parent)
     initConnect();
     initUI();
 
+    //connection for emit
+    connect(this,
+            SIGNAL(sendInAngleToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receiveValue(double)));
+    connect(this,
+            SIGNAL(sendInAngleDistanceToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receiveinAngleDistanceChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendOutAngleDistanceToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receiveoutAngleDistanceChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendWaveLengthToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receivewaveLengthChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendBeamRadiusToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receivebeamRadiusChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendPixelSpaceXToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receivepixelSpaceXChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendPixelSpaceYToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receivepixelSpaceYChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendHorizontalOffsetToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receivehorizontalOffsetChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendVertitalOffsetToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receivevertitalOffsetChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendPlottingScaleToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receiveplottingScaleChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendOpticalScreenXToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receiveopticalScreenXChangedSignal(double)));
+    connect(this,
+            SIGNAL(sendOpticalScreenYToQuickwindow(double)),
+            quickWidget->rootObject(),
+            SIGNAL(receiveopticalScreenYChangedSignal(double)));
+
+    //connection for receive
     connect(quickWidget->rootObject(),
             SIGNAL(inAngleChangedSignal(double)),
             this,
@@ -517,4 +568,63 @@ void MainWindow::connectOpticalScreenXToMainwindow(double value)
 void MainWindow::connectOpticalScreenYToMainwindow(double value)
 {
     ui->yCenterBox->setValue(value);
+}
+
+void MainWindow::on_thetaBox_valueChanged()
+{
+    emit sendInAngleToQuickwindow(ui->thetaBox->value());
+}
+
+void MainWindow::on_l_0Box_valueChanged()
+{
+    emit sendInAngleDistanceToQuickwindow(ui->l_0Box->value());
+}
+
+void MainWindow::on_L_0Box_valueChanged()
+{
+    emit sendOutAngleDistanceToQuickwindow(ui->L_0Box->value());
+}
+
+void MainWindow::on_LambdaBox_valueChanged()
+{
+    emit sendWaveLengthToQuickwindow(ui->LambdaBox->value());
+}
+
+void MainWindow::on_beamRadiusBox_valueChanged()
+{
+    emit sendBeamRadiusToQuickwindow(ui->beamRadiusBox->value());
+}
+
+void MainWindow::on_xSpacingBox_valueChanged()
+{
+    emit sendPixelSpaceXToQuickwindow(ui->xSpacingBox->value());
+}
+
+void MainWindow::on_ySpacingBox_valueChanged()
+{
+    emit sendPixelSpaceYToQuickwindow(ui->ySpacingBox->value());
+}
+
+void MainWindow::on_xOffsetBox_valueChanged()
+{
+    emit sendHorizontalOffsetToQuickwindow(ui->xOffsetBox->value());
+}
+
+void MainWindow::on_yOffsetBox_valueChanged()
+{
+    emit sendVertitalOffsetToQuickwindow(ui->yOffsetBox->value());
+}
+
+void MainWindow::on_scaleBox_valueChanged()
+{
+    emit sendPlottingScaleToQuickwindow(ui->scaleBox->value());
+}
+void MainWindow::on_xCenterBox_valueChanged()
+{
+    emit sendOpticalScreenXToQuickwindow(ui->xCenterBox->value());
+}
+
+void MainWindow::on_yCenterBox_valueChanged()
+{
+    emit sendOpticalScreenYToQuickwindow(ui->yCenterBox->value());
 }

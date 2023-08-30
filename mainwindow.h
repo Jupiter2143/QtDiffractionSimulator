@@ -64,6 +64,30 @@ private slots:
     void on_actRaster_triggered();
     //edit at 8.28.2023 QMainWindow *w, QQuickWidget *q
 
+    void on_thetaBox_valueChanged();
+    //receive from quickwindow
+    void on_l_0Box_valueChanged();
+
+    void on_L_0Box_valueChanged();
+
+    void on_LambdaBox_valueChanged();
+
+    void on_beamRadiusBox_valueChanged();
+
+    void on_xSpacingBox_valueChanged();
+
+    void on_ySpacingBox_valueChanged();
+
+    void on_xOffsetBox_valueChanged();
+
+    void on_yOffsetBox_valueChanged();
+
+    void on_scaleBox_valueChanged();
+
+    void on_xCenterBox_valueChanged();
+
+    void on_yCenterBox_valueChanged();
+
 public slots:
     void connectInAngleToMainwindow(double value);
     void connectInAngleDistanceToMainwindow(double value);
@@ -77,6 +101,21 @@ public slots:
     void connectPlottingScaleToMainwindow(double value);
     void connectOpticalScreenXToMainwindow(double value);
     void connectOpticalScreenYToMainwindow(double value);
+
+    //emit to quickwindow
+signals:
+    void sendInAngleToQuickwindow(double value);
+    void sendInAngleDistanceToQuickwindow(double value);
+    void sendOutAngleDistanceToQuickwindow(double value);
+    void sendWaveLengthToQuickwindow(double value);
+    void sendBeamRadiusToQuickwindow(double value);
+    void sendPixelSpaceXToQuickwindow(double value);
+    void sendPixelSpaceYToQuickwindow(double value);
+    void sendHorizontalOffsetToQuickwindow(double value);
+    void sendVertitalOffsetToQuickwindow(double value);
+    void sendPlottingScaleToQuickwindow(double value);
+    void sendOpticalScreenXToQuickwindow(double value);
+    void sendOpticalScreenYToQuickwindow(double value);
 
 private:
     Ui::MainWindow* ui;

@@ -3,6 +3,7 @@ import QtQuick3D
 import QtQuick.Dialogs
 import QtQuick.Controls
 import QtQuick3D.Particles3D
+import QtQuick.Controls.Basic
 
 //Window
 Rectangle {
@@ -47,18 +48,50 @@ Rectangle {
         }
         Node {
             id: cameraNode
+
             eulerRotation.x: -17
-            eulerRotation.y: 115
+            eulerRotation.y: 115 + camera.cameraAnim2 * 300
+
             PerspectiveCamera {
                 id: camera
+                property real cameraAnim1: 0 //周期缩放循环效果
+                property real cameraAnim2: 0 //周期旋转循环效果
                 y: 20
                 clipNear: 0.1
                 fieldOfView: 50
-                z: 520
                 x: -10
                 clipFar: 800
+
+                SequentialAnimation on cameraAnim1 {
+                    running: visOfPF.checked
+                    loops: Animation.Infinite
+                    NumberAnimation {
+                        to: 1
+                        duration: 3000
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        to: 0
+                        duration: 2000
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+                SequentialAnimation on cameraAnim2 {
+                    running: visOfPF.checked
+                    loops: Animation.Infinite
+                    NumberAnimation {
+                        to: 50
+                        duration: 300000
+                    }
+                    NumberAnimation {
+                        to: 0
+                        duration: 300000
+                    }
+                }
+                z: 520 - cameraAnim1 * 130
             }
         }
+
         Model {
             id: laser_source
             position: Qt.vector3d(174.136, 16.2984, -1.59588)
@@ -412,7 +445,7 @@ Rectangle {
         id: para_setting_frame
         width: 300 // 设置宽度为 300
         height: 600
-        visible: true
+        visible: visOfPF.checked
         background: Rectangle {
             color: "#20606060" // 将透明度部分设置为完全半透明
         }
@@ -625,7 +658,15 @@ Rectangle {
             }
         }
     }
-    //声明
+    CustomCheckBox {
+        id: visOfPF
+        text: "显示参数设置面板"
+        checked: false
+        x: 980
+        y: 670
+    }
+
+    //声明发送的slot信号
     signal inAngleChangedSignal(double value)
     signal inAngleDistanceChangedSignal(double value)
     signal outAngleDistanceChangedSignal(double value)
@@ -638,4 +679,105 @@ Rectangle {
     signal plottingScaleChangedSignal(double value)
     signal opticalScreenXChangedSignal(double value)
     signal opticalScreenYChangedSignal(double value)
+
+    //声明接受的slot信号
+    signal receiveValue(double value)
+    signal receiveinAngleDistanceChangedSignal(double value)
+    signal receiveoutAngleDistanceChangedSignal(double value)
+    signal receivewaveLengthChangedSignal(double value)
+    signal receivebeamRadiusChangedSignal(double value)
+    signal receivepixelSpaceXChangedSignal(double value)
+    signal receivepixelSpaceYChangedSignal(double value)
+    signal receivehorizontalOffsetChangedSignal(double value)
+    signal receivevertitalOffsetChangedSignal(double value)
+    signal receiveplottingScaleChangedSignal(double value)
+    signal receiveopticalScreenXChangedSignal(double value)
+    signal receiveopticalScreenYChangedSignal(double value)
+
+    function handleReceivedValue(receivedValue) {
+        para_angle.sliderValue = receivedValue
+    }
+    function handleReceiveinAngleDistanceChangedSignal(receiveinAngleDistanceChangedSignal) {
+        para_inAngleDistance.sliderValue = receiveinAngleDistanceChangedSignal
+    }
+    function handleReceiveoutAngleDistanceChangedSignal(receiveoutAngleDistanceChangedSignal) {
+        para_outAngleDistance.sliderValue = receiveoutAngleDistanceChangedSignal
+    }
+    function handleReceivewaveLengthChangedSignal(receivewaveLengthChangedSignal) {
+        para_waveLength.sliderValue = receivewaveLengthChangedSignal
+    }
+    function handleReceivebeamRadiusChangedSignal(receivebeamRadiusChangedSignal) {
+        para_beamRadius.sliderValue = receivebeamRadiusChangedSignal
+    }
+    function handleReceivepixelSpaceXChangedSignal(receivepixelSpaceXChangedSignal) {
+        para_pixelSpaceX.sliderValue = receivepixelSpaceXChangedSignal
+    }
+    function handleReceivepixelSpaceYChangedSignal(receivepixelSpaceYChangedSignal) {
+        para_pixelSpaceY.sliderValue = receivepixelSpaceYChangedSignal
+    }
+    function handleReceivehorizontalOffsetChangedSignal(receivehorizontalOffsetChangedSignal) {
+        para_horizontalOffset.sliderValue = receivehorizontalOffsetChangedSignal
+    }
+    function handleReceivevertitalOffsetChangedSignal(receivevertitalOffsetChangedSignal) {
+        para_verticalOffset.sliderValue = receivevertitalOffsetChangedSignal
+    }
+    function handleReceiveplottingScaleChangedSignal(receiveplottingScaleChangedSignal) {
+        para_plottingScale.sliderValue = receiveplottingScaleChangedSignal
+    }
+    function handleReceiveopticalScreenXChangedSignal(receiveopticalScreenXChangedSignal) {
+        para_verticalOffset.sliderValue = receiveopticalScreenXChangedSignal
+    }
+    function handleReceiveopticalScreenYChangedSignal(receiveopticalScreenYChangedSignal) {
+        para_opticalScreenY.sliderValue = receiveopticalScreenYChangedSignal
+    }
+
+    Connections {
+        target: window
+        onReceiveValue: {
+            handleReceivedValue(value) // 调用槽函数处理接收到的值
+        }
+        onReceiveinAngleDistanceChangedSignal: {
+            handleReceiveinAngleDistanceChangedSignal(value)
+        }
+
+        onReceiveoutAngleDistanceChangedSignal: {
+            handleReceiveoutAngleDistanceChangedSignal(value)
+        }
+
+        onReceivewaveLengthChangedSignal: {
+            handleReceivewaveLengthChangedSignal(value)
+        }
+
+        onReceivebeamRadiusChangedSignal: {
+            handleReceivebeamRadiusChangedSignal(value)
+        }
+
+        onReceivepixelSpaceXChangedSignal: {
+            handleReceivepixelSpaceXChangedSignal(value)
+        }
+
+        onReceivepixelSpaceYChangedSignal: {
+            handleReceivepixelSpaceYChangedSignal(value)
+        }
+
+        onReceivehorizontalOffsetChangedSignal: {
+            handleReceivehorizontalOffsetChangedSignal(value)
+        }
+
+        onReceivevertitalOffsetChangedSignal: {
+            handleReceivevertitalOffsetChangedSignal(value)
+        }
+
+        onReceiveplottingScaleChangedSignal: {
+            handleReceiveplottingScaleChangedSignal(value)
+        }
+
+        onReceiveopticalScreenXChangedSignal: {
+            handleReceiveopticalScreenXChangedSignal(value)
+        }
+
+        onReceiveopticalScreenYChangedSignal: {
+            handleReceiveopticalScreenYChangedSignal(value)
+        }
+    }
 }
