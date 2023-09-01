@@ -351,7 +351,7 @@ Rectangle {
         PrincipledMaterial {
             id: material_003_material
             objectName: "material_003_material"
-            baseColor: "#000080"
+            baseColor: "#8A2BE2"
         }
 
         PrincipledMaterial {
@@ -375,8 +375,9 @@ Rectangle {
         PrincipledMaterial {
             id: material_006_material
             objectName: "material_006_material"
-            //            baseColor: "#BA55D3"
-            baseColor: "#E6E6FA"
+            baseColorMap: Texture {
+                source: "qrc:/res/sourceDir/diff.png"
+            }
         }
         PrincipledMaterial {
             //the color when the object is clicked
@@ -637,7 +638,6 @@ Rectangle {
         width: 145
         x: 987
         y: 670
-
         text: "回到默认视角" // 按钮文本
         background: Rectangle {
             border.width: 2
