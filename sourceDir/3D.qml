@@ -50,45 +50,16 @@ Rectangle {
             id: cameraNode
 
             eulerRotation.x: -17
-            eulerRotation.y: 115 + camera.cameraAnim2 * 300
+            eulerRotation.y: 115
 
             PerspectiveCamera {
                 id: camera
-                property real cameraAnim1: 0 //周期缩放循环效果
-                property real cameraAnim2: 0 //周期旋转循环效果
                 y: 20
                 clipNear: 0.1
                 fieldOfView: 50
                 x: -10
+                z: 520
                 clipFar: 800
-
-                SequentialAnimation on cameraAnim1 {
-                    running: visOfPF.checked
-                    loops: Animation.Infinite
-                    NumberAnimation {
-                        to: 1
-                        duration: 3000
-                        easing.type: Easing.InOutQuad
-                    }
-                    NumberAnimation {
-                        to: 0
-                        duration: 2000
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-                SequentialAnimation on cameraAnim2 {
-                    running: visOfPF.checked
-                    loops: Animation.Infinite
-                    NumberAnimation {
-                        to: 50
-                        duration: 300000
-                    }
-                    NumberAnimation {
-                        to: 0
-                        duration: 300000
-                    }
-                }
-                z: 520 - cameraAnim1 * 130
             }
         }
 
@@ -263,7 +234,6 @@ Rectangle {
         }
         Node {
             id: gaugeItem
-
             property real value: 0
             property real needleSize: 150
 
@@ -314,8 +284,8 @@ Rectangle {
                 // This system rotates together with the needle
                 ParticleSystem3D {
                     id: psystemNeedle
-                    running: true
-                    visible: running
+                    //                    running: true
+                    visible: visOfEf.checked
                     SpriteParticle3D {
                         id: needleParticle
                         sprite: Texture {
@@ -369,7 +339,7 @@ Rectangle {
         PrincipledMaterial {
             id: laser_beam_material_material
             objectName: "laser_beam_material_material"
-            baseColor: "#FFA500"
+            baseColor: "#FF0000"
         }
 
         PrincipledMaterial {
@@ -381,7 +351,7 @@ Rectangle {
         PrincipledMaterial {
             id: material_003_material
             objectName: "material_003_material"
-            baseColor: "#000080"
+            baseColor: "#8A2BE2"
         }
 
         PrincipledMaterial {
@@ -405,19 +375,23 @@ Rectangle {
         PrincipledMaterial {
             id: material_006_material
             objectName: "material_006_material"
-            baseColor: "#BA55D3"
+            baseColorMap: Texture {
+                source: "qrc:/res/sourceDir/diff.png"
+            }
         }
         PrincipledMaterial {
             //the color when the object is clicked
             id: material_clicked
             objectName: "material_006_material"
-            baseColor: "#FF0000"
+            //            baseColor: "#FF0000"
+            baseColor: "#FFD700"
         }
     }
     Column {
         x: parent.x + 5
         y: parent.y + 43
         spacing: 3
+        visible: visOfPF.checked && para_setting_frame.visible
         Rectangle {
             width: 300
             height: 275
@@ -670,12 +644,36 @@ Rectangle {
             }
         }
     }
+
+    Button {
+        height: 30
+        width: 145
+        x: 987
+        y: 670
+        text: "回到默认视角" // 按钮文本
+        background: Rectangle {
+            border.width: 2
+            color: Qt.rgba(0.8, 0.8, 0.8, 1)
+        }
+        // 信号槽连接
+        onClicked: {
+            resetCamPo()
+        }
+    }
     CustomCheckBox {
         id: visOfPF
         text: "显示参数设置面板"
         checked: false
         x: 980
-        y: 670
+        y: 605
+    }
+
+    CustomCheckBox {
+        id: visOfEf
+        text: "显示入射光线效果"
+        checked: false
+        x: 980
+        y: 635
     }
 
     //声明发送的slot信号
@@ -706,6 +704,7 @@ Rectangle {
     signal receiveopticalScreenXChangedSignal(double value)
     signal receiveopticalScreenYChangedSignal(double value)
 
+    //handleFuncitons
     function handleReceivedValue(receivedValue) {
         para_angle.sliderValue = receivedValue
     }
@@ -741,6 +740,15 @@ Rectangle {
     }
     function handleReceiveopticalScreenYChangedSignal(receiveopticalScreenYChangedSignal) {
         para_opticalScreenY.sliderValue = receiveopticalScreenYChangedSignal
+    }
+
+    //相机归位回归初始位置函数
+    function resetCamPo() {
+        cameraNode.eulerRotation.x = -17
+        cameraNode.eulerRotation.y = 115
+        camera.x = -10
+        camera.y = 20
+        camera.z = 520
     }
 
     Connections {
