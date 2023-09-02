@@ -21,105 +21,105 @@ MainWindow::MainWindow(QWidget* parent)
     initConnect();
     initUI();
 
-    //connection for emit
+    // connection for emit
     connect(this,
-            SIGNAL(sendInAngleToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receiveValue(double)));
+        SIGNAL(sendInAngleToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receiveValue(double)));
     connect(this,
-            SIGNAL(sendInAngleDistanceToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receiveinAngleDistanceChangedSignal(double)));
+        SIGNAL(sendInAngleDistanceToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receiveinAngleDistanceChangedSignal(double)));
     connect(this,
-            SIGNAL(sendOutAngleDistanceToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receiveoutAngleDistanceChangedSignal(double)));
+        SIGNAL(sendOutAngleDistanceToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receiveoutAngleDistanceChangedSignal(double)));
     connect(this,
-            SIGNAL(sendWaveLengthToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receivewaveLengthChangedSignal(double)));
+        SIGNAL(sendWaveLengthToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receivewaveLengthChangedSignal(double)));
     connect(this,
-            SIGNAL(sendBeamRadiusToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receivebeamRadiusChangedSignal(double)));
+        SIGNAL(sendBeamRadiusToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receivebeamRadiusChangedSignal(double)));
     connect(this,
-            SIGNAL(sendPixelSpaceXToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receivepixelSpaceXChangedSignal(double)));
+        SIGNAL(sendPixelSpaceXToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receivepixelSpaceXChangedSignal(double)));
     connect(this,
-            SIGNAL(sendPixelSpaceYToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receivepixelSpaceYChangedSignal(double)));
+        SIGNAL(sendPixelSpaceYToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receivepixelSpaceYChangedSignal(double)));
     connect(this,
-            SIGNAL(sendHorizontalOffsetToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receivehorizontalOffsetChangedSignal(double)));
+        SIGNAL(sendHorizontalOffsetToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receivehorizontalOffsetChangedSignal(double)));
     connect(this,
-            SIGNAL(sendVertitalOffsetToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receivevertitalOffsetChangedSignal(double)));
+        SIGNAL(sendVertitalOffsetToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receivevertitalOffsetChangedSignal(double)));
     connect(this,
-            SIGNAL(sendPlottingScaleToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receiveplottingScaleChangedSignal(double)));
+        SIGNAL(sendPlottingScaleToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receiveplottingScaleChangedSignal(double)));
     connect(this,
-            SIGNAL(sendOpticalScreenXToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receiveopticalScreenXChangedSignal(double)));
+        SIGNAL(sendOpticalScreenXToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receiveopticalScreenXChangedSignal(double)));
     connect(this,
-            SIGNAL(sendOpticalScreenYToQuickwindow(double)),
-            quickWidget->rootObject(),
-            SIGNAL(receiveopticalScreenYChangedSignal(double)));
+        SIGNAL(sendOpticalScreenYToQuickwindow(double)),
+        quickWidget->rootObject(),
+        SIGNAL(receiveopticalScreenYChangedSignal(double)));
 
-    //connection for receive
+    // connection for receive
     connect(quickWidget->rootObject(),
-            SIGNAL(inAngleChangedSignal(double)),
-            this,
-            SLOT(connectInAngleToMainwindow(double)));
+        SIGNAL(inAngleChangedSignal(double)),
+        this,
+        SLOT(connectInAngleToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(inAngleDistanceChangedSignal(double)),
-            this,
-            SLOT(connectInAngleDistanceToMainwindow(double)));
+        SIGNAL(inAngleDistanceChangedSignal(double)),
+        this,
+        SLOT(connectInAngleDistanceToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(outAngleDistanceChangedSignal(double)),
-            this,
-            SLOT(connectOutAngleDistanceToMainwindow(double)));
+        SIGNAL(outAngleDistanceChangedSignal(double)),
+        this,
+        SLOT(connectOutAngleDistanceToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(waveLengthChangedSignal(double)),
-            this,
-            SLOT(connectWaveLengthToMainwindow(double)));
+        SIGNAL(waveLengthChangedSignal(double)),
+        this,
+        SLOT(connectWaveLengthToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(beamRadiusChangedSignal(double)),
-            this,
-            SLOT(connectBeamRadiusToMainwindow(double)));
+        SIGNAL(beamRadiusChangedSignal(double)),
+        this,
+        SLOT(connectBeamRadiusToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(pixelSpaceXChangedSignal(double)),
-            this,
-            SLOT(connectPixelSpaceXToMainwindow(double)));
+        SIGNAL(pixelSpaceXChangedSignal(double)),
+        this,
+        SLOT(connectPixelSpaceXToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(pixelSpaceYChangedSignal(double)),
-            this,
-            SLOT(connectPixelSpaceYToMainwindow(double)));
+        SIGNAL(pixelSpaceYChangedSignal(double)),
+        this,
+        SLOT(connectPixelSpaceYToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(horizontalOffsetChangedSignal(double)),
-            this,
-            SLOT(connectHorizontalOffsetToMainwindow(double)));
+        SIGNAL(horizontalOffsetChangedSignal(double)),
+        this,
+        SLOT(connectHorizontalOffsetToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(vertitalOffsetChangedSignal(double)),
-            this,
-            SLOT(connectVertitalOffsetToMainwindow(double)));
+        SIGNAL(vertitalOffsetChangedSignal(double)),
+        this,
+        SLOT(connectVertitalOffsetToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(plottingScaleChangedSignal(double)),
-            this,
-            SLOT(connectPlottingScaleToMainwindow(double)));
+        SIGNAL(plottingScaleChangedSignal(double)),
+        this,
+        SLOT(connectPlottingScaleToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(opticalScreenXChangedSignal(double)),
-            this,
-            SLOT(connectOpticalScreenXToMainwindow(double)));
+        SIGNAL(opticalScreenXChangedSignal(double)),
+        this,
+        SLOT(connectOpticalScreenXToMainwindow(double)));
     connect(quickWidget->rootObject(),
-            SIGNAL(opticalScreenYChangedSignal(double)),
-            this,
-            SLOT(connectOpticalScreenYToMainwindow(double)));
+        SIGNAL(opticalScreenYChangedSignal(double)),
+        this,
+        SLOT(connectOpticalScreenYToMainwindow(double)));
 }
 
 void MainWindow::initBackEnd()
@@ -572,56 +572,75 @@ void MainWindow::connectOpticalScreenYToMainwindow(double value)
 
 void MainWindow::on_thetaBox_valueChanged()
 {
-    emit sendInAngleToQuickwindow(ui->thetaBox->value());
+    QObject* OBJ = quickWidget->rootObject()->findChild<QObject*>("para_angle");
+    OBJ->setProperty("sliderValue", ui->thetaBox->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_inAngleDistance");
+    OBJ->setProperty("sliderValue", ui->l_0Box->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_outAngleDistance");
+    OBJ->setProperty("sliderValue", ui->L_0Box->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_waveLength");
+    OBJ->setProperty("sliderValue", ui->LambdaBox->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_beamRadius");
+    OBJ->setProperty("sliderValue", ui->beamRadiusBox->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_pixelSpaceX");
+    OBJ->setProperty("sliderValue", ui->xSpacingBox->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_pixelSpaceY");
+    OBJ->setProperty("sliderValue", ui->ySpacingBox->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_horizontalOffset");
+    OBJ->setProperty("sliderValue", ui->xCenterBox->value());
+    OBJ = quickWidget->rootObject()->findChild<QObject*>("para_verticalOffset");
+    OBJ->setProperty("sliderValue", ui->yCenterBox->value());
+
+    //    emit sendInAngleToQuickwindow(ui->thetaBox->value());
 }
 
 void MainWindow::on_l_0Box_valueChanged()
 {
-    emit sendInAngleDistanceToQuickwindow(ui->l_0Box->value());
+    //    emit sendInAngleDistanceToQuickwindow(ui->l_0Box->value());
 }
 
 void MainWindow::on_L_0Box_valueChanged()
 {
-    emit sendOutAngleDistanceToQuickwindow(ui->L_0Box->value());
+    //    emit sendOutAngleDistanceToQuickwindow(ui->L_0Box->value());
 }
 
 void MainWindow::on_LambdaBox_valueChanged()
 {
-    emit sendWaveLengthToQuickwindow(ui->LambdaBox->value());
+    //    emit sendWaveLengthToQuickwindow(ui->LambdaBox->value());
 }
 
 void MainWindow::on_beamRadiusBox_valueChanged()
 {
-    emit sendBeamRadiusToQuickwindow(ui->beamRadiusBox->value());
+    //    emit sendBeamRadiusToQuickwindow(ui->beamRadiusBox->value());
 }
 
 void MainWindow::on_xSpacingBox_valueChanged()
 {
-    emit sendPixelSpaceXToQuickwindow(ui->xSpacingBox->value());
+    //    emit sendPixelSpaceXToQuickwindow(ui->xSpacingBox->value());
 }
 
 void MainWindow::on_ySpacingBox_valueChanged()
 {
-    emit sendPixelSpaceYToQuickwindow(ui->ySpacingBox->value());
+    //    emit sendPixelSpaceYToQuickwindow(ui->ySpacingBox->value());
 }
 
 void MainWindow::on_xOffsetBox_valueChanged()
 {
-    emit sendHorizontalOffsetToQuickwindow(ui->xOffsetBox->value());
+    //    emit sendHorizontalOffsetToQuickwindow(ui->xOffsetBox->value());
 }
 
 void MainWindow::on_yOffsetBox_valueChanged()
 {
-    emit sendVertitalOffsetToQuickwindow(ui->yOffsetBox->value());
+    //    emit sendVertitalOffsetToQuickwindow(ui->yOffsetBox->value());
 }
 
 void MainWindow::on_scaleBox_valueChanged()
 {
-    emit sendPlottingScaleToQuickwindow(ui->scaleBox->value());
+    //    emit sendPlottingScaleToQuickwindow(ui->scaleBox->value());
 }
 void MainWindow::on_xCenterBox_valueChanged()
 {
-    emit sendOpticalScreenXToQuickwindow(ui->xCenterBox->value());
+    //    emit sendOpticalScreenXToQuickwindow(ui->xCenterBox->value());
 }
 
 void MainWindow::on_yCenterBox_valueChanged()

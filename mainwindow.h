@@ -16,10 +16,9 @@ namespace Ui {
 class MainWindow;
 }
 
-void moveToCenter(QMainWindow *w);
+void moveToCenter(QMainWindow* w);
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -62,10 +61,10 @@ private slots:
     void on_actExit_triggered();
 
     void on_actRaster_triggered();
-    //edit at 8.28.2023 QMainWindow *w, QQuickWidget *q
+    // edit at 8.28.2023 QMainWindow *w, QQuickWidget *q
 
     void on_thetaBox_valueChanged();
-    //receive from quickwindow
+    // receive from quickwindow
     void on_l_0Box_valueChanged();
 
     void on_L_0Box_valueChanged();
@@ -102,7 +101,7 @@ public slots:
     void connectOpticalScreenXToMainwindow(double value);
     void connectOpticalScreenYToMainwindow(double value);
 
-    //emit to quickwindow
+    // emit to quickwindow
 signals:
     void sendInAngleToQuickwindow(double value);
     void sendInAngleDistanceToQuickwindow(double value);

@@ -469,6 +469,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_angle
+                objectName: "para_angle"
                 unit: "°"
                 sliderValue: 68.590
                 fromValue: 0
@@ -485,6 +486,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_inAngleDistance
+                objectName: "para_inAngleDistance"
                 unit: "m"
                 sliderValue: 0.500
                 fromValue: 0
@@ -502,6 +504,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_outAngleDistance
+                objectName: "para_outAngleDistance"
                 sliderValue: 0.870
                 fromValue: 0
                 toValue: 999
@@ -519,6 +522,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_waveLength
+                objectName: "para_waveLength"
                 sliderValue: 635
                 fromValue: 0
                 toValue: 1000
@@ -535,6 +539,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_beamRadius
+                objectName: "para_beamRadius"
                 sliderValue: 1.00
                 fromValue: 0
                 toValue: 999
@@ -551,6 +556,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_pixelSpaceX
+                objectName: "para_pixelSpaceX"
                 sliderValue: 63.82
                 fromValue: 0
                 toValue: 999.00
@@ -567,6 +573,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_pixelSpaceY
+                objectName: "para_pixelSpaceY"
                 sliderValue: 63.82
                 fromValue: 0
                 toValue: 999.00
@@ -583,6 +590,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_horizontalOffset
+                objectName: "para_horizontalOffset"
                 sliderValue: 0.000
                 fromValue: 0
                 toValue: 999
@@ -600,6 +608,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_verticalOffset
+                objectName: "para_verticalOffset"
                 sliderValue: 0.000
                 fromValue: 0
                 toValue: 999
@@ -616,6 +625,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_plottingScale
+                objectName: "para_plottingScale"
                 sliderValue: 0.2
                 fromValue: 0
                 toValue: 360
@@ -632,6 +642,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_opticalScreenX
+                objectName: "para_opticalScreenX"
                 sliderValue: 0.000
                 fromValue: 0
                 toValue: 999
@@ -648,6 +659,7 @@ Rectangle {
             }
             CustomSlider {
                 id: para_opticalScreenY
+                objectName: "para_opticalScreenY"
                 sliderValue: 0.000
                 fromValue: 0
                 toValue: 999
