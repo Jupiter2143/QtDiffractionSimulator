@@ -34,7 +34,7 @@ Item {
             onValueChanged: {
                 rootItem.sliderValue = slider.value
             }
-            stepSize: 0.01
+            stepSize: 0.001
             Layout.minimumWidth: 200
             Layout.fillWidth: true
             background: Rectangle {
@@ -65,7 +65,6 @@ Item {
             id: valueText
             text: slider.value.toFixed(3) + " " + unit
             color: "#f0f0f0"
-            //            font.pointSize: settings.fontSizeSmall
             font.bold: true
             Layout.minimumWidth: 60
         }
