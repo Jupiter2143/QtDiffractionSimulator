@@ -404,6 +404,7 @@ Rectangle {
                 (laser_source.isPicked
                  || beam_01.isPicked) ? '#E040FB' : '#004F4F4F'
             }
+            radius: 10
         }
         Rectangle {
             width: 300
@@ -411,6 +412,7 @@ Rectangle {
             color: {
                 phone.isPicked ? '#FF4081' : '#004F4F4F'
             }
+            radius: 10
         }
         Rectangle {
             width: 300
@@ -418,6 +420,7 @@ Rectangle {
             color: {
                 cube_001.isPicked ? '#536DFE' : '#004F4F4F'
             }
+            radius: 10
         }
     }
 
