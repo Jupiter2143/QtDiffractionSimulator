@@ -402,7 +402,7 @@ Rectangle {
             height: 275
             color: {
                 (laser_source.isPicked
-                 || beam_01.isPicked) ? '#E040FB' : '#004F4F4F'
+                 || beam_01.isPicked) ? '#1A237E' : '#004F4F4F'
             }
             radius: 10
         }
@@ -410,7 +410,7 @@ Rectangle {
             width: 300
             height: 205
             color: {
-                phone.isPicked ? '#FF4081' : '#004F4F4F'
+                phone.isPicked ? '#01579B' : '#004F4F4F'
             }
             radius: 10
         }
@@ -418,7 +418,7 @@ Rectangle {
             width: 300
             height: 160
             color: {
-                cube_001.isPicked ? '#536DFE' : '#004F4F4F'
+                cube_001.isPicked ? '#33691E' : '#004F4F4F'
             }
             radius: 10
         }
@@ -635,8 +635,8 @@ Rectangle {
         y: 670
         text: "回到默认视角"
         background: Rectangle {
-            border.width: 2
             color: Qt.rgba(0.8, 0.8, 0.8, 1)
+            radius: 5
         }
         onClicked: resetCamPo()
     }
