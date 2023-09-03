@@ -5,12 +5,26 @@ import QtQuick.Controls
 import QtQuick3D.Particles3D
 import QtQuick.Controls.Basic
 
-//Window
 Rectangle {
     id: window
     width: 720 * 1.618
     height: 720
     visible: true
+
+    property alias thetaValue: theta.sliderValue
+    property alias in_l0Value: in_l0.sliderValue
+    property alias out_L0Value: out_L0.sliderValue
+    property alias lambdaValue: lambda.sliderValue
+    property alias beamRadiusValue: beamRadius.sliderValue
+    property alias xSpacingValue: xSpacing.sliderValue
+    property alias ySpacingValue: ySpacing.sliderValue
+    property alias xOffsetValue: xOffset.sliderValue
+    property alias yOffsetValue: yOffset.sliderValue
+    property alias scaleValue: scale.sliderValue
+    property alias xCenterValue: xCenter.sliderValue
+    property alias yCenterValue: yCenter.sliderValue
+
+    signal qmlValueChange(double theta, double in_l0, double out_L0, double lambda, double beamRadius, double xSpacing, double ySpacing, double xOffset, double yOffset, double scale, double xCenter, double yCenter)
 
     Item {
         id: none
@@ -216,7 +230,6 @@ Rectangle {
                                    cy = mouse.y
                                }
             onClicked: mouse => {
-                           // Get screen coordinates of the click
                            var result = view.pick(mouse.x, mouse.y)
                            if (result.objectHit) {
                                var pickedObject = result.objectHit
@@ -280,11 +293,8 @@ Rectangle {
                     lifeSpanVariation: 1000
                 }
 
-                // Needle particle system
-                // This system rotates together with the needle
                 ParticleSystem3D {
                     id: psystemNeedle
-                    //                    running: true
                     visible: visOfEf.checked
                     SpriteParticle3D {
                         id: needleParticle
@@ -294,7 +304,6 @@ Rectangle {
                         maxAmount: 500
                         fadeInDuration: 50
                         fadeOutDuration: 200
-                        //                        color: "#40808020"
                         color: "#40DC143C"
                         colorVariation: Qt.vector4d(0.2, 0.2, 0.0, 0.2)
                         blendMode: SpriteParticle3D.Screen
@@ -302,7 +311,6 @@ Rectangle {
 
                     ParticleEmitter3D {
                         particle: needleParticle
-                        //                        x: -1000
                         y: -300
 
                         scale: Qt.vector3d(
@@ -333,19 +341,19 @@ Rectangle {
         PrincipledMaterial {
             id: laser_body_material
             objectName: "laser_body_material"
-            baseColor: "#ff09080e"
+            baseColor: "#4E342E"
         }
 
         PrincipledMaterial {
             id: laser_beam_material_material
             objectName: "laser_beam_material_material"
-            baseColor: "#FF0000"
+            baseColor: "#B71C1C"
         }
 
         PrincipledMaterial {
             id: material_004_material
             objectName: "material_004_material"
-            baseColor: "#282828"
+            baseColor: "#111111"
         }
 
         PrincipledMaterial {
@@ -357,7 +365,7 @@ Rectangle {
         PrincipledMaterial {
             id: material_002_material
             objectName: "material_002_material"
-            baseColor: "#282828"
+            baseColor: "#111111"
         }
 
         PrincipledMaterial {
@@ -375,15 +383,12 @@ Rectangle {
         PrincipledMaterial {
             id: material_006_material
             objectName: "material_006_material"
-            baseColorMap: Texture {
-                source: "qrc:/res/sourceDir/diff.png"
-            }
+            baseColor: "#40C4FF"
         }
         PrincipledMaterial {
             //the color when the object is clicked
             id: material_clicked
             objectName: "material_006_material"
-            //            baseColor: "#FF0000"
             baseColor: "#FFD700"
         }
     }
@@ -397,31 +402,32 @@ Rectangle {
             height: 275
             color: {
                 (laser_source.isPicked
-                 || beam_01.isPicked) ? '#E04F4F4F' : '#004F4F4F'
+                 || beam_01.isPicked) ? '#E040FB' : '#004F4F4F'
             }
         }
         Rectangle {
             width: 300
             height: 205
             color: {
-                phone.isPicked ? '#E04F4F4F' : '#004F4F4F'
+                phone.isPicked ? '#FF4081' : '#004F4F4F'
             }
         }
         Rectangle {
             width: 300
             height: 160
             color: {
-                cube_001.isPicked ? '#E04F4F4F' : '#004F4F4F'
+                cube_001.isPicked ? '#536DFE' : '#004F4F4F'
             }
         }
     }
+
     Frame {
         id: para_setting_frame
-        width: 300 // 设置宽度为 300
+        width: 300
         height: 600
         visible: visOfPF.checked
         background: Rectangle {
-            color: "#20606060" // 将透明度部分设置为完全半透明
+            color: "#20606060"
         }
         anchors.top: parent.top
         anchors.left: parent.left
@@ -442,15 +448,13 @@ Rectangle {
                 text: "入射角： "
             }
             CustomSlider {
-                id: para_angle
-                objectName: "para_angle"
+                id: theta
+                objectName: "theta"
                 unit: "°"
-                sliderValue: 68.590
+                sliderValue: 58.59
                 fromValue: 0
-                toValue: 99.990
-                onSliderValueChanged: {
-                    inAngleChangedSignal(para_angle.sliderValue)
-                }
+                toValue: 89.999
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_inAngleDistance
@@ -459,16 +463,13 @@ Rectangle {
                 text: "入射距离： "
             }
             CustomSlider {
-                id: para_inAngleDistance
-                objectName: "para_inAngleDistance"
+                id: in_l0
+                objectName: "in_l0"
                 unit: "m"
                 sliderValue: 0.500
                 fromValue: 0
-                toValue: 999
-                onSliderValueChanged: {
-                    inAngleDistanceChangedSignal(
-                                para_inAngleDistance.sliderValue)
-                }
+                toValue: 999.999
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_outAngleDistance
@@ -477,16 +478,13 @@ Rectangle {
                 text: "出射距离： "
             }
             CustomSlider {
-                id: para_outAngleDistance
-                objectName: "para_outAngleDistance"
+                id: out_L0
+                objectName: "out_L0"
                 sliderValue: 0.870
                 fromValue: 0
-                toValue: 999
+                toValue: 999.999
                 unit: "m"
-                onSliderValueChanged: {
-                    outAngleDistanceChangedSignal(
-                                para_outAngleDistance.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_waveLength
@@ -495,15 +493,14 @@ Rectangle {
                 text: "波长： "
             }
             CustomSlider {
-                id: para_waveLength
-                objectName: "para_waveLength"
-                sliderValue: 635
+                id: lambda
+                objectName: "lambda"
+                sliderValue: 635.0
+                sliderStepSize: 1
                 fromValue: 0
-                toValue: 1000
+                toValue: 999.999
                 unit: "nm"
-                onSliderValueChanged: {
-                    waveLengthChangedSignal(para_waveLength.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_beamRadius
@@ -512,15 +509,13 @@ Rectangle {
                 text: "光束半径： "
             }
             CustomSlider {
-                id: para_beamRadius
-                objectName: "para_beamRadius"
+                id: beamRadius
+                objectName: "beamRadius"
                 sliderValue: 1.00
                 fromValue: 0
-                toValue: 999
+                toValue: 999.999
                 unit: "mm"
-                onSliderValueChanged: {
-                    beamRadiusChangedSignal(para_beamRadius.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_pixelSpaceX
@@ -529,15 +524,13 @@ Rectangle {
                 text: "像素间距X： "
             }
             CustomSlider {
-                id: para_pixelSpaceX
-                objectName: "para_pixelSpaceX"
+                id: xSpacing
+                objectName: "xSpacing"
                 sliderValue: 63.82
-                fromValue: 0
-                toValue: 999.00
+                fromValue: -999.999
+                toValue: 999.999
                 unit: "um"
-                onSliderValueChanged: {
-                    pixelSpaceXChangedSignal(para_pixelSpaceX.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_pixelSpaceY
@@ -546,15 +539,13 @@ Rectangle {
                 text: "像素间距Y： "
             }
             CustomSlider {
-                id: para_pixelSpaceY
-                objectName: "para_pixelSpaceY"
+                id: ySpacing
+                objectName: "ySpacing"
                 sliderValue: 63.82
-                fromValue: 0
-                toValue: 999.00
+                fromValue: -999.999
+                toValue: 999.999
                 unit: "um"
-                onSliderValueChanged: {
-                    pixelSpaceYChangedSignal(para_pixelSpaceY.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_horizontalOffset
@@ -563,16 +554,13 @@ Rectangle {
                 text: "水平偏移： "
             }
             CustomSlider {
-                id: para_horizontalOffset
-                objectName: "para_horizontalOffset"
+                id: xOffset
+                objectName: "xOffset"
                 sliderValue: 0.000
-                fromValue: 0
-                toValue: 999
+                fromValue: -999.999
+                toValue: 999.999
                 unit: "um"
-                onSliderValueChanged: {
-                    horizontalOffsetChangedSignal(
-                                para_horizontalOffset.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_vertitalOffset
@@ -581,15 +569,13 @@ Rectangle {
                 text: "垂直偏移： "
             }
             CustomSlider {
-                id: para_verticalOffset
-                objectName: "para_verticalOffset"
+                id: yOffset
+                objectName: "yOffset"
                 sliderValue: 0.000
-                fromValue: 0
-                toValue: 999
+                fromValue: -999.999
+                toValue: 999.999
                 unit: "um"
-                onSliderValueChanged: {
-                    vertitalOffsetChangedSignal(para_verticalOffset.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_plottingScale
@@ -598,15 +584,13 @@ Rectangle {
                 text: "比例尺： "
             }
             CustomSlider {
-                id: para_plottingScale
-                objectName: "para_plottingScale"
+                id: scale
+                objectName: "scale"
                 sliderValue: 0.2
                 fromValue: 0
-                toValue: 360
+                toValue: 999.999
                 unit: "mm"
-                onSliderValueChanged: {
-                    plottingScaleChangedSignal(para_plottingScale.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_opticalScreenX
@@ -615,15 +599,13 @@ Rectangle {
                 text: "光屏中心X： "
             }
             CustomSlider {
-                id: para_opticalScreenX
-                objectName: "para_opticalScreenX"
+                id: xCenter
+                objectName: "xCenter"
                 sliderValue: 0.000
-                fromValue: 0
-                toValue: 999
+                fromValue: -999.999
+                toValue: 999.999
                 unit: "m"
-                onSliderValueChanged: {
-                    opticalScreenXChangedSignal(para_opticalScreenX.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
             Text {
                 id: text_opticalScreenY
@@ -632,15 +614,13 @@ Rectangle {
                 text: "光屏中心Y： "
             }
             CustomSlider {
-                id: para_opticalScreenY
-                objectName: "para_opticalScreenY"
+                id: yCenter
+                objectName: "yCenter"
                 sliderValue: 0.000
-                fromValue: 0
-                toValue: 999
+                fromValue: -999.999
+                toValue: 999.999
                 unit: "m"
-                onSliderValueChanged: {
-                    opticalScreenYChangedSignal(para_opticalScreenY.sliderValue)
-                }
+                onSliderValueChanged: emitSignal()
             }
         }
     }
@@ -650,20 +630,17 @@ Rectangle {
         width: 145
         x: 987
         y: 670
-        text: "回到默认视角" // 按钮文本
+        text: "回到默认视角"
         background: Rectangle {
             border.width: 2
             color: Qt.rgba(0.8, 0.8, 0.8, 1)
         }
-        // 信号槽连接
-        onClicked: {
-            resetCamPo()
-        }
+        onClicked: resetCamPo()
     }
     CustomCheckBox {
         id: visOfPF
         text: "显示参数设置面板"
-        checked: false
+        checked: true
         x: 980
         y: 605
     }
@@ -675,129 +652,17 @@ Rectangle {
         x: 980
         y: 635
     }
-
-    //声明发送的slot信号
-    signal inAngleChangedSignal(double value)
-    signal inAngleDistanceChangedSignal(double value)
-    signal outAngleDistanceChangedSignal(double value)
-    signal waveLengthChangedSignal(double value)
-    signal beamRadiusChangedSignal(double value)
-    signal pixelSpaceXChangedSignal(double value)
-    signal pixelSpaceYChangedSignal(double value)
-    signal horizontalOffsetChangedSignal(double value)
-    signal vertitalOffsetChangedSignal(double value)
-    signal plottingScaleChangedSignal(double value)
-    signal opticalScreenXChangedSignal(double value)
-    signal opticalScreenYChangedSignal(double value)
-
-    //声明接受的slot信号
-    signal receiveValue(double value)
-    signal receiveinAngleDistanceChangedSignal(double value)
-    signal receiveoutAngleDistanceChangedSignal(double value)
-    signal receivewaveLengthChangedSignal(double value)
-    signal receivebeamRadiusChangedSignal(double value)
-    signal receivepixelSpaceXChangedSignal(double value)
-    signal receivepixelSpaceYChangedSignal(double value)
-    signal receivehorizontalOffsetChangedSignal(double value)
-    signal receivevertitalOffsetChangedSignal(double value)
-    signal receiveplottingScaleChangedSignal(double value)
-    signal receiveopticalScreenXChangedSignal(double value)
-    signal receiveopticalScreenYChangedSignal(double value)
-
-    //handleFuncitons
-    function handleReceivedValue(receivedValue) {
-        para_angle.sliderValue = receivedValue
+    function emitSignal() {
+        qmlValueChange(thetaValue, in_l0Value, out_L0Value, lambdaValue,
+                       beamRadiusValue, xSpacingValue, ySpacingValue,
+                       xOffsetValue, yOffsetValue, scaleValue, xCenterValue,
+                       yCenterValue)
     }
-    function handleReceiveinAngleDistanceChangedSignal(receiveinAngleDistanceChangedSignal) {
-        para_inAngleDistance.sliderValue = receiveinAngleDistanceChangedSignal
-    }
-    function handleReceiveoutAngleDistanceChangedSignal(receiveoutAngleDistanceChangedSignal) {
-        para_outAngleDistance.sliderValue = receiveoutAngleDistanceChangedSignal
-    }
-    function handleReceivewaveLengthChangedSignal(receivewaveLengthChangedSignal) {
-        para_waveLength.sliderValue = receivewaveLengthChangedSignal
-    }
-    function handleReceivebeamRadiusChangedSignal(receivebeamRadiusChangedSignal) {
-        para_beamRadius.sliderValue = receivebeamRadiusChangedSignal
-    }
-    function handleReceivepixelSpaceXChangedSignal(receivepixelSpaceXChangedSignal) {
-        para_pixelSpaceX.sliderValue = receivepixelSpaceXChangedSignal
-    }
-    function handleReceivepixelSpaceYChangedSignal(receivepixelSpaceYChangedSignal) {
-        para_pixelSpaceY.sliderValue = receivepixelSpaceYChangedSignal
-    }
-    function handleReceivehorizontalOffsetChangedSignal(receivehorizontalOffsetChangedSignal) {
-        para_horizontalOffset.sliderValue = receivehorizontalOffsetChangedSignal
-    }
-    function handleReceivevertitalOffsetChangedSignal(receivevertitalOffsetChangedSignal) {
-        para_verticalOffset.sliderValue = receivevertitalOffsetChangedSignal
-    }
-    function handleReceiveplottingScaleChangedSignal(receiveplottingScaleChangedSignal) {
-        para_plottingScale.sliderValue = receiveplottingScaleChangedSignal
-    }
-    function handleReceiveopticalScreenXChangedSignal(receiveopticalScreenXChangedSignal) {
-        para_verticalOffset.sliderValue = receiveopticalScreenXChangedSignal
-    }
-    function handleReceiveopticalScreenYChangedSignal(receiveopticalScreenYChangedSignal) {
-        para_opticalScreenY.sliderValue = receiveopticalScreenYChangedSignal
-    }
-
-    //相机归位回归初始位置函数
     function resetCamPo() {
         cameraNode.eulerRotation.x = -17
         cameraNode.eulerRotation.y = 115
         camera.x = -10
         camera.y = 20
         camera.z = 520
-    }
-
-    Connections {
-        target: window
-        onReceiveValue: {
-            handleReceivedValue(value) // 调用槽函数处理接收到的值
-        }
-        onReceiveinAngleDistanceChangedSignal: {
-            handleReceiveinAngleDistanceChangedSignal(value)
-        }
-
-        onReceiveoutAngleDistanceChangedSignal: {
-            handleReceiveoutAngleDistanceChangedSignal(value)
-        }
-
-        onReceivewaveLengthChangedSignal: {
-            handleReceivewaveLengthChangedSignal(value)
-        }
-
-        onReceivebeamRadiusChangedSignal: {
-            handleReceivebeamRadiusChangedSignal(value)
-        }
-
-        onReceivepixelSpaceXChangedSignal: {
-            handleReceivepixelSpaceXChangedSignal(value)
-        }
-
-        onReceivepixelSpaceYChangedSignal: {
-            handleReceivepixelSpaceYChangedSignal(value)
-        }
-
-        onReceivehorizontalOffsetChangedSignal: {
-            handleReceivehorizontalOffsetChangedSignal(value)
-        }
-
-        onReceivevertitalOffsetChangedSignal: {
-            handleReceivevertitalOffsetChangedSignal(value)
-        }
-
-        onReceiveplottingScaleChangedSignal: {
-            handleReceiveplottingScaleChangedSignal(value)
-        }
-
-        onReceiveopticalScreenXChangedSignal: {
-            handleReceiveopticalScreenXChangedSignal(value)
-        }
-
-        onReceiveopticalScreenYChangedSignal: {
-            handleReceiveopticalScreenYChangedSignal(value)
-        }
     }
 }

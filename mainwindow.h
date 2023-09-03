@@ -9,6 +9,7 @@
 #include <QGraphicsScene>
 #include <QImage>
 #include <QMainWindow>
+#include <QQmlContext>
 #include <QQuickItem>
 #include <QQuickWidget>
 #include <QStandardItemModel>
@@ -49,72 +50,16 @@ private slots:
     void on_mapBox_currentIndexChanged(int index);
     void on_horizontalSlider_valueChanged(int value);
     void on_unitBox_currentTextChanged(const QString& arg1);
-
     void on_actQML_triggered();
-
     void on_actHelp_triggered();
-
     void on_actAbout_triggered();
-
     void on_actRestart_triggered();
-
     void on_actExit_triggered();
-
     void on_actRaster_triggered();
-    // edit at 8.28.2023 QMainWindow *w, QQuickWidget *q
-
-    void on_thetaBox_valueChanged();
-    // receive from quickwindow
-    void on_l_0Box_valueChanged();
-
-    void on_L_0Box_valueChanged();
-
-    void on_LambdaBox_valueChanged();
-
-    void on_beamRadiusBox_valueChanged();
-
-    void on_xSpacingBox_valueChanged();
-
-    void on_ySpacingBox_valueChanged();
-
-    void on_xOffsetBox_valueChanged();
-
-    void on_yOffsetBox_valueChanged();
-
-    void on_scaleBox_valueChanged();
-
-    void on_xCenterBox_valueChanged();
-
-    void on_yCenterBox_valueChanged();
 
 public slots:
-    void connectInAngleToMainwindow(double value);
-    void connectInAngleDistanceToMainwindow(double value);
-    void connectOutAngleDistanceToMainwindow(double value);
-    void connectWaveLengthToMainwindow(double value);
-    void connectBeamRadiusToMainwindow(double value);
-    void connectPixelSpaceXToMainwindow(double value);
-    void connectPixelSpaceYToMainwindow(double value);
-    void connectHorizontalOffsetToMainwindow(double value);
-    void connectVertitalOffsetToMainwindow(double value);
-    void connectPlottingScaleToMainwindow(double value);
-    void connectOpticalScreenXToMainwindow(double value);
-    void connectOpticalScreenYToMainwindow(double value);
-
-    // emit to quickwindow
-signals:
-    void sendInAngleToQuickwindow(double value);
-    void sendInAngleDistanceToQuickwindow(double value);
-    void sendOutAngleDistanceToQuickwindow(double value);
-    void sendWaveLengthToQuickwindow(double value);
-    void sendBeamRadiusToQuickwindow(double value);
-    void sendPixelSpaceXToQuickwindow(double value);
-    void sendPixelSpaceYToQuickwindow(double value);
-    void sendHorizontalOffsetToQuickwindow(double value);
-    void sendVertitalOffsetToQuickwindow(double value);
-    void sendPlottingScaleToQuickwindow(double value);
-    void sendOpticalScreenXToQuickwindow(double value);
-    void sendOpticalScreenYToQuickwindow(double value);
+    void on_qmlValueChanged(double theta, double in_l0, double out_L0, double lambda, double beamRadius, double xSpacing, double ySpacing, double xOffset, double yOffset, double scale, double xCenter, double yCenter);
+    void on_cppValueChanged();
 
 private:
     Ui::MainWindow* ui;

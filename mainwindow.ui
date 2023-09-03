@@ -514,8 +514,8 @@ QComboBox::drop-down {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>245</width>
-         <height>850</height>
+         <width>236</width>
+         <height>842</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -577,6 +577,9 @@ QComboBox::drop-down {
                </property>
                <property name="decimals">
                 <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>89.998999999999995</double>
                </property>
                <property name="value">
                 <double>58.590000000000003</double>
@@ -868,6 +871,9 @@ QComboBox::drop-down {
                </property>
                <property name="suffix">
                 <string> mm</string>
+               </property>
+               <property name="maximum">
+                <double>999.990000000000009</double>
                </property>
                <property name="value">
                 <double>1.000000000000000</double>
@@ -1474,7 +1480,7 @@ QComboBox::drop-down {
      <x>0</x>
      <y>0</y>
      <width>929</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

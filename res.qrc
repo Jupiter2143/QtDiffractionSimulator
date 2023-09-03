@@ -21,7 +21,6 @@
         <file>sourceDir/laser.png</file>
         <file>sourceDir/jetMap.png</file>
         <file>sourceDir/diff.png</file>
-        <file>sourceDir/icon_settings.png</file>
         <file>sourceDir/dot.png</file>
     </qresource>
 </RCC>
